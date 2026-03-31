@@ -1,0 +1,1063 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Katalyst Health – Advanced Clinical Assessment</title>
+<link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:wght@400;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root {
+  --k-dark:  #1b4d3e; --k-mid:  #2d7a56; --k-soft:  #4a9e78;
+  --k-pale:  #e6f4ed; --k-rule: #b8d9c8; --k-text:  #1a2e25;
+  --k-muted: #4a6358; --k-bg:   #f4faf7; --k-white: #ffffff;
+  --score-g: #1b5e3e; --score-y: #7a5800; --score-r: #8b1a1a;
+  --bg-g: #d4edda; --bg-y: #fff3cd; --bg-r: #fde8e8;
+  --c0:#5c9e8a; --c1:#e6a817; --c2:#d4732a; --c3:#b83232;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Inter',sans-serif;background:var(--k-bg);color:var(--k-text);font-size:13.5px;line-height:1.5}
+
+.page-header{background:linear-gradient(120deg,var(--k-dark) 0%,var(--k-mid) 100%);color:white;padding:22px 44px 18px;display:flex;align-items:center;justify-content:space-between;gap:20px;border-bottom:4px solid var(--k-soft)}
+.logo-wrap img{height:68px;object-fit:contain;filter:brightness(0) invert(1)}
+.header-right{text-align:right}
+.header-right h1{font-family:'Source Serif 4',serif;font-size:1.75rem;font-weight:700;letter-spacing:-0.01em;line-height:1.1}
+.header-right .sub{font-size:0.78rem;font-weight:300;opacity:0.8;margin-top:5px;letter-spacing:0.06em;text-transform:uppercase}
+
+.companion-bar{background:#1a3a2e;color:rgba(255,255,255,0.88);padding:11px 44px;font-size:0.82rem;display:flex;align-items:center;gap:10px}
+.companion-bar strong{color:#a8e6c8}
+
+.instr-banner{background:var(--k-dark);color:white;padding:14px 44px;display:flex;align-items:flex-start;gap:14px}
+.instr-banner p{font-size:0.84rem;line-height:1.7;opacity:0.93}
+.instr-banner strong{color:#a8e6c8}
+
+.scale-legend{display:flex;align-items:center;gap:0;background:white;border-bottom:1px solid var(--k-rule);padding:0 44px}
+.scale-legend .sl-label{font-size:0.72rem;font-weight:600;text-transform:uppercase;letter-spacing:0.06em;color:var(--k-muted);padding:9px 16px 9px 0;white-space:nowrap}
+.scale-chips{display:flex;gap:8px;padding:8px 0}
+.sc-chip{display:flex;align-items:center;gap:6px;padding:4px 12px 4px 8px;border-radius:20px;font-size:0.77rem;font-weight:600;border:2px solid}
+.sc-chip .sc-dot{width:10px;height:10px;border-radius:50%}
+.sc-chip.n0{border-color:var(--c0);color:var(--c0)} .sc-chip.n0 .sc-dot{background:var(--c0)}
+.sc-chip.n1{border-color:var(--c1);color:var(--c1)} .sc-chip.n1 .sc-dot{background:var(--c1)}
+.sc-chip.n2{border-color:var(--c2);color:var(--c2)} .sc-chip.n2 .sc-dot{background:var(--c2)}
+.sc-chip.n3{border-color:var(--c3);color:var(--c3)} .sc-chip.n3 .sc-dot{background:var(--c3)}
+.sc-arrow{color:var(--k-muted);font-size:0.75rem;margin:0 6px;font-weight:300}
+
+.client-bar{background:white;border-bottom:2px solid var(--k-rule);padding:12px 44px;display:flex;gap:32px;align-items:center}
+.field{display:flex;align-items:center;gap:8px}
+.field label{font-size:0.72rem;font-weight:600;text-transform:uppercase;letter-spacing:0.06em;color:var(--k-muted);white-space:nowrap}
+.field input{border:none;border-bottom:2px solid var(--k-rule);padding:3px 2px;font-size:0.9rem;font-family:'Inter',sans-serif;background:transparent;color:var(--k-text);outline:none;min-width:180px;transition:border-color 0.2s}
+.field input:focus{border-bottom-color:var(--k-mid)}
+
+.main-wrap{padding:28px 44px 48px}
+.group-title{font-family:'Source Serif 4',serif;font-size:1.35rem;font-weight:700;color:var(--k-dark);padding:20px 0 6px;margin-bottom:14px;border-bottom:3px solid var(--k-soft);letter-spacing:-0.01em}
+.group-title:not(:first-of-type){margin-top:20px}
+
+.sec-card{background:white;border:1px solid var(--k-rule);border-radius:10px;overflow:hidden;margin-bottom:20px;box-shadow:0 1px 6px rgba(27,77,62,0.07);page-break-inside:avoid}
+.sec-head{background:var(--k-dark);color:white;padding:12px 20px;display:flex;align-items:center;justify-content:space-between}
+.sec-head h3{font-family:'Source Serif 4',serif;font-size:1.1rem;font-weight:600;letter-spacing:-0.01em}
+.sec-head-badge{background:rgba(255,255,255,0.15);border:1px solid rgba(255,255,255,0.3);border-radius:16px;padding:3px 14px;font-size:0.75rem;font-weight:500;white-space:nowrap;min-width:110px;text-align:center}
+
+.col-header-row{display:grid;grid-template-columns:1fr 102px 102px 102px 102px;background:var(--k-pale);border-bottom:2px solid var(--k-rule);padding:0 20px}
+.ch-label{padding:8px 0;font-size:0.7rem;font-weight:700;text-transform:uppercase;letter-spacing:0.07em;text-align:center;display:flex;flex-direction:column;align-items:center;gap:3px}
+.ch-label:first-child{text-align:left;align-items:flex-start;color:var(--k-muted)}
+.ch-score-tag{font-size:0.68rem;font-weight:600;border-radius:10px;padding:1px 7px;color:white}
+.ch-label:nth-child(2){color:var(--c0)} .ch-label:nth-child(2) .ch-score-tag{background:var(--c0)}
+.ch-label:nth-child(3){color:var(--c1)} .ch-label:nth-child(3) .ch-score-tag{background:var(--c1)}
+.ch-label:nth-child(4){color:var(--c2)} .ch-label:nth-child(4) .ch-score-tag{background:var(--c2)}
+.ch-label:nth-child(5){color:var(--c3)} .ch-label:nth-child(5) .ch-score-tag{background:var(--c3)}
+
+.q-row{display:grid;grid-template-columns:1fr 102px 102px 102px 102px;border-bottom:1px solid #f0f5f2;padding:0 20px;min-height:48px;align-items:center;transition:background 0.1s}
+.q-row:last-of-type{border-bottom:none}
+.q-row:hover{background:#fafcfb}
+.q-text{font-size:0.87rem;color:var(--k-text);padding:10px 16px 10px 0;line-height:1.45}
+.q-opt{display:flex;align-items:center;justify-content:center;padding:6px 4px}
+.q-opt input[type="radio"]{display:none}
+.q-opt label{width:44px;height:44px;border-radius:50%;border:2.5px solid #cde0d7;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:0.75rem;font-weight:600;color:#8aaa9a;transition:all 0.15s}
+.q-opt label:hover{border-color:var(--k-mid);color:var(--k-mid);background:var(--k-pale)}
+.q-opt.opt-0 input:checked+label{background:var(--c0);border-color:var(--c0);color:white;box-shadow:0 2px 8px rgba(92,158,138,0.4)}
+.q-opt.opt-1 input:checked+label{background:var(--c1);border-color:var(--c1);color:white;box-shadow:0 2px 8px rgba(230,168,23,0.4)}
+.q-opt.opt-2 input:checked+label{background:var(--c2);border-color:var(--c2);color:white;box-shadow:0 2px 8px rgba(212,115,42,0.4)}
+.q-opt.opt-3 input:checked+label{background:var(--c3);border-color:var(--c3);color:white;box-shadow:0 2px 8px rgba(184,50,50,0.4)}
+
+.yn-col-header{display:grid;grid-template-columns:1fr 120px 120px;background:var(--k-pale);border-bottom:2px solid var(--k-rule);padding:0 20px}
+.ych-label{padding:8px 0;font-size:0.7rem;font-weight:700;text-transform:uppercase;letter-spacing:0.07em;text-align:center;display:flex;flex-direction:column;align-items:center;gap:3px}
+.ych-label:first-child{text-align:left;align-items:flex-start;color:var(--k-muted)}
+.ych-label:nth-child(2){color:var(--c0)} .ych-label:nth-child(2) .ch-score-tag{background:var(--c0)}
+.ych-label:nth-child(3){color:var(--c3)} .ych-label:nth-child(3) .ch-score-tag{background:var(--c3)}
+.yn-row{display:grid;grid-template-columns:1fr 120px 120px;border-bottom:1px solid #f0f5f2;padding:0 20px;min-height:48px;align-items:center;transition:background 0.1s}
+.yn-row:last-of-type{border-bottom:none}
+.yn-row:hover{background:#fafcfb}
+.yn-opt{display:flex;align-items:center;justify-content:center;padding:6px}
+.yn-opt input[type="radio"]{display:none}
+.yn-opt label{width:64px;height:38px;border-radius:8px;border:2.5px solid #cde0d7;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:0.8rem;font-weight:700;color:#8aaa9a;letter-spacing:0.04em;transition:all 0.15s}
+.yn-opt label:hover{border-color:var(--k-mid);color:var(--k-mid)}
+.yn-opt.yn-no input:checked+label{background:var(--c0);border-color:var(--c0);color:white}
+.yn-opt.yn-yes input:checked+label{background:var(--c3);border-color:var(--c3);color:white}
+
+.sub-row{background:var(--k-pale);border-bottom:1px solid var(--k-rule);border-top:2px solid var(--k-rule);padding:7px 20px;font-size:0.72rem;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;color:var(--k-muted)}
+.block-sep{border-top:2px dashed var(--k-rule);margin:0 20px}
+.q-row.hallmark-row{background:#fffdf4}
+.q-row.hallmark-row:hover{background:#fffbea}
+.hallmark-tag{display:inline-block;font-size:0.62rem;font-weight:700;background:#fff3cd;color:#7a5800;border:1px solid #f0d080;border-radius:4px;padding:1px 5px;margin-left:6px;vertical-align:middle;white-space:nowrap}
+.exp-row{display:grid;grid-template-columns:1fr 60px 60px;border-bottom:1px solid #f0f5f2;padding:4px 20px;min-height:40px;align-items:center}
+.exp-opt{display:flex;align-items:center;justify-content:center}
+.exp-opt input[type="checkbox"]{width:20px;height:20px;accent-color:var(--k-mid);cursor:pointer}
+.exp-header{display:grid;grid-template-columns:1fr 60px 60px;background:#f8f8f0;padding:5px 20px;border-bottom:1px solid var(--k-rule);border-top:2px dashed var(--k-rule)}
+.exp-header span{font-size:0.69rem;font-weight:700;text-transform:uppercase;letter-spacing:0.06em;color:var(--k-muted);text-align:center}
+.exp-header span:first-child{text-align:left}
+.barto-note{background:#fffdf0;border-left:3px solid var(--c2);padding:8px 16px;font-size:0.78rem;color:#5a4a00;margin:0}
+
+.sec-score-footer{background:var(--k-pale);border-top:2px solid var(--k-rule);padding:14px 20px;display:flex;align-items:center;gap:20px;flex-wrap:wrap}
+.ssf-left{display:flex;align-items:baseline;gap:8px;min-width:180px}
+.ssf-label{font-size:0.72rem;font-weight:700;text-transform:uppercase;letter-spacing:0.07em;color:var(--k-muted)}
+.ssf-number{font-size:2rem;font-weight:700;font-family:'Source Serif 4',serif;color:var(--k-dark);line-height:1;min-width:52px}
+.ssf-thresholds{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.thresh-box{display:flex;align-items:center;gap:6px;padding:6px 14px;border-radius:8px;border:2px solid;font-size:0.78rem;font-weight:600;transition:all 0.15s}
+.thresh-box .t-dot{width:10px;height:10px;border-radius:50%;flex-shrink:0}
+.thresh-box.t-g{border-color:#a8d5b5;color:var(--score-g);background:white} .thresh-box.t-g .t-dot{background:var(--score-g)}
+.thresh-box.t-y{border-color:#f0d080;color:var(--score-y);background:white} .thresh-box.t-y .t-dot{background:var(--score-y)}
+.thresh-box.t-r{border-color:#f0b0b0;color:var(--score-r);background:white} .thresh-box.t-r .t-dot{background:var(--score-r)}
+.thresh-box.active-g{background:var(--score-g);border-color:var(--score-g);color:white} .thresh-box.active-g .t-dot{background:white}
+.thresh-box.active-y{background:var(--score-y);border-color:var(--score-y);color:white} .thresh-box.active-y .t-dot{background:white}
+.thresh-box.active-r{background:var(--score-r);border-color:var(--score-r);color:white} .thresh-box.active-r .t-dot{background:white}
+.ssf-status{margin-left:auto;font-size:0.82rem;font-weight:600;padding:6px 16px;border-radius:20px;border:2px solid var(--k-rule);color:var(--k-muted);background:white;white-space:nowrap}
+.ssf-status.s-g{border-color:#a8d5b5;color:var(--score-g);background:var(--bg-g)}
+.ssf-status.s-y{border-color:#f0d080;color:var(--score-y);background:var(--bg-y)}
+.ssf-status.s-r{border-color:#f0b0b0;color:var(--score-r);background:var(--bg-r)}
+
+.summary-card{background:white;border:1px solid var(--k-rule);border-radius:10px;overflow:hidden;margin-bottom:40px;box-shadow:0 1px 6px rgba(27,77,62,0.07)}
+.sum-table{width:100%;border-collapse:collapse}
+.sum-table th{background:var(--k-pale);color:var(--k-muted);padding:9px 16px;font-size:0.72rem;font-weight:700;text-transform:uppercase;letter-spacing:0.06em;text-align:left;border-bottom:1px solid var(--k-rule)}
+.sum-table td{padding:10px 16px;font-size:0.87rem;border-bottom:1px solid #f0f5f2;vertical-align:middle}
+.sum-table tr:last-child td{border-bottom:none}
+.td-score{font-size:1.15rem;font-weight:700;font-family:'Source Serif 4',serif}
+.spill-g{display:inline-block;padding:2px 10px;border-radius:10px;font-size:0.75rem;font-weight:600;background:var(--bg-g);color:var(--score-g)}
+.spill-y{display:inline-block;padding:2px 10px;border-radius:10px;font-size:0.75rem;font-weight:600;background:var(--bg-y);color:var(--score-y)}
+.spill-r{display:inline-block;padding:2px 10px;border-radius:10px;font-size:0.75rem;font-weight:600;background:var(--bg-r);color:var(--score-r)}
+.spill-na{display:inline-block;padding:2px 10px;border-radius:10px;font-size:0.75rem;font-weight:600;background:#eee;color:#999}
+
+.page-footer{background:var(--k-dark);color:rgba(255,255,255,0.75);text-align:center;padding:18px 44px;font-size:0.77rem;line-height:1.8}
+.page-footer a{color:#a8e6c8;text-decoration:none}
+.page-footer strong{color:white}
+
+.fab-print{position:fixed;bottom:24px;right:24px;background:var(--k-mid);color:white;border:none;border-radius:50px;padding:13px 26px;font-family:'Inter',sans-serif;font-size:0.88rem;font-weight:600;cursor:pointer;box-shadow:0 4px 18px rgba(27,77,62,0.3);z-index:200;letter-spacing:0.02em;transition:all 0.2s}
+.fab-print:hover{background:var(--k-dark);transform:translateY(-2px)}
+.fab-copy{position:fixed;bottom:24px;right:220px;background:var(--k-dark);color:white;border:none;border-radius:50px;padding:13px 22px;font-family:'Inter',sans-serif;font-size:0.88rem;font-weight:600;cursor:pointer;box-shadow:0 4px 18px rgba(27,77,62,0.3);z-index:200;letter-spacing:0.02em;transition:all 0.2s}
+.fab-copy:hover{background:var(--k-mid);transform:translateY(-2px)}
+
+@media print{
+  *{-webkit-print-color-adjust:exact;print-color-adjust:exact}
+  body{background:white;font-size:11px}
+  .page-header,.instr-banner,.companion-bar{background:var(--k-dark)!important}
+  .sec-head{background:var(--k-dark)!important}
+  .fab-print,.fab-copy{display:none!important}
+  .main-wrap{padding:16px 24px 24px}
+  .sec-card{break-inside:avoid;box-shadow:none;margin-bottom:14px}
+}
+</style>
+</head>
+<body>
+
+<header class="page-header">
+  <div class="logo-wrap">
+    <img src="https://img1.wsimg.com/isteam/ip/860fb15b-127c-444d-9b36-d9ecb9f378cf/blob-e6e477a.png/:/rs=h:176,cg:true,m/qt=q:95" alt="Katalyst Health"
+         onerror="this.parentElement.innerHTML='<div style=\'font-family:serif;font-size:1.6rem;font-weight:700;color:white;\'>Katalyst Health</div>'">
+  </div>
+  <div class="header-right">
+    <h1>Advanced Clinical Assessment</h1>
+    <p class="sub">Katka Gazdik, FDN Practitioner &nbsp;·&nbsp; katalystforhealth.com &nbsp;·&nbsp; 206-354-7242</p>
+  </div>
+</header>
+
+<div class="companion-bar">
+  📋&nbsp; <strong>Important:</strong> This form is designed for complex cases and works alongside your MC Scorecard and Lifestyle &amp; Medical History intake forms. Please complete those first. This form covers areas those forms do not — pathogens, co-infections, mold/CIRS, MCAS, POTS, and heavy metal toxicity.
+</div>
+
+<div class="instr-banner">
+  <div style="font-size:1.2rem;margin-top:1px;flex-shrink:0">📋</div>
+  <p>
+    Rate each symptom based on how often you experienced it over the <strong>last 90 days.</strong>
+    For Yes/No questions, select what applies. Scores update automatically — <strong>Yellow or Red</strong> flags an area for your consultation.
+    <strong>★ Hallmark items count double</strong> — they are the most clinically significant for that condition.
+    When finished, click <strong>📋 Copy Score Summary</strong> and paste into an email to katka@katalysthealth.us, or click <strong>🖨 Print / Save as PDF</strong> and attach the file.
+    <br><br>
+    <strong>Please note:</strong> Higher scores indicate a stronger pattern fit for discussion and possible follow-up — not a diagnosis. Many symptoms overlap across conditions. This form helps guide follow-up questions and testing priorities.
+  </p>
+</div>
+
+<div class="scale-legend">
+  <div class="sl-label">Frequency Scale:</div>
+  <div class="scale-chips">
+    <div class="sc-chip n0"><div class="sc-dot"></div>Never (0)</div>
+    <div class="sc-arrow">→</div>
+    <div class="sc-chip n1"><div class="sc-dot"></div>Occasionally</div>
+    <div class="sc-arrow">→</div>
+    <div class="sc-chip n2"><div class="sc-dot"></div>Often</div>
+    <div class="sc-arrow">→</div>
+    <div class="sc-chip n3"><div class="sc-dot"></div>Regularly (highest)</div>
+  </div>
+</div>
+
+<div class="client-bar">
+  <div class="field"><label>Client Name</label><input type="text" placeholder="Full name"></div>
+  <div class="field"><label>Date of Birth</label><input type="text" placeholder="MM / DD / YYYY" style="min-width:130px"></div>
+  <div class="field"><label>Date Completed</label><input type="text" placeholder="MM / DD / YYYY" style="min-width:130px"></div>
+</div>
+
+<div class="main-wrap" id="form-root"></div>
+
+<div class="main-wrap" style="padding-top:0">
+  <div class="summary-card">
+    <div class="sec-head"><h3>Score Summary — All Sections</h3><div class="sec-head-badge">Complete the form above first</div></div>
+    <table class="sum-table" id="sum-table">
+      <thead><tr><th style="width:36%">Section</th><th style="width:10%">Score</th><th style="width:14%">Range</th><th>🟢 Green</th><th>🟡 Yellow</th><th>🔴 Red</th></tr></thead>
+      <tbody id="sum-body"></tbody>
+    </table>
+  </div>
+</div>
+
+<footer class="page-footer">
+  <strong>Katalyst Health</strong> &nbsp;·&nbsp; Katka Gazdik, FDN Practitioner, MSc Neuroscience | BSc Cell &amp; Molecular Biology &nbsp;·&nbsp;
+  <a href="mailto:katka@katalysthealth.us">katka@katalysthealth.us</a> &nbsp;·&nbsp;
+  <a href="tel:2063547242">206-354-7242</a> &nbsp;·&nbsp; Bellingham, WA &nbsp;·&nbsp; <a href="https://katalystforhealth.com">katalystforhealth.com</a><br>
+  <em>This assessment is for informational and educational purposes only and does not constitute medical advice, diagnosis, or treatment. Higher scores indicate a stronger pattern fit for discussion and possible follow-up — not a diagnosis. Many symptoms overlap across conditions. Results help guide follow-up questions and testing priorities.</em>
+</footer>
+
+<button class="fab-print" onclick="window.print()">🖨&nbsp; Print / Save as PDF</button>
+<button class="fab-copy" onclick="copyScores()">📋&nbsp; Copy Score Summary</button>
+<div id="copyToast" style="display:none;position:fixed;bottom:80px;right:24px;background:var(--k-dark);color:white;padding:10px 20px;border-radius:8px;font-size:0.85rem;z-index:300">✓ Copied to clipboard!</div>
+
+<script>
+const _A=[0,1,2,3],_B=[0,2,4,6],_C=[0,4,6,8],_D=[0,1,2,4],_E=[0,4,8,10],_F=[0,2,4,5],_G=[0,1,3,4],_H=[0,2,3,4],_I=[0,2,6,8],_J=[0,6,8,12],_K=[0,0],_L=[0,1,2,6];
+
+const SECTIONS = [
+
+// ══════════════════════════════════════════════════
+// IMMUNE HISTORY & ENERGY SYSTEMS
+// ══════════════════════════════════════════════════
+// Trimmed: removed items covered by MC Scorecard (fatigue, brain fog, mood, blood sugar, sleep items)
+// Kept: infection history, exercise-specific intolerance, thermal dysregulation, unique autonomic items
+{ id:'mito', title:'Mitochondrial Dysfunction — Unique Indicators',
+  group:'Immune History & Energy Systems',
+  g:[0,8], y:[9,20], r:[21,50], questions:[
+  ['History of chronic infections (EBV, CMV, Lyme, mold, etc.)?','yn',[0,1]],
+  ['Unable to tolerate much exercise — crashes after activity','f',_A],
+  ['Poor exercise or muscle stamina — muscles fatigue very quickly','f',_A],
+  ['Low muscle tone despite exercise?','yn',[0,1]],
+  ['Migraines or seizures','f',_A],
+  ['Unexplained breathing problems or shortness of breath','f',_A],
+  ['Low body temperature (below 97.5°F / 36.4°C)?','yn',[0,1]],
+  ['Intolerant to heat — heat exposure worsens all symptoms','f',_A],
+  ['Low thyroid lab numbers despite being treated?','yn',[0,1]],
+  ['Little or no skin sweating even during exercise or heat','yn',[0,1]],
+  ['Eyes sensitive to bright or direct light','yn',[0,1]],
+  ['Dizziness upon standing up quickly (orthostatic)','f',_A],
+]},
+
+// Trimmed: removed items in MC Scorecard Detox/Hormone sections
+// Kept: lymphatic/vascular-specific items and those not in MC Scorecard
+{ id:'drainage', title:'Drainage & Lymphatic Dysfunction — Unique Indicators',
+  group:'Immune History & Energy Systems',
+  g:[0,9], y:[10,22], r:[23,52], questions:[
+  ['Wake up between 1am and 4am (not for bathroom)','f',_A],
+  ['Edema — swelling or retaining extra fluids in body','f',_A],
+  ['Yellowish tinge to skin or eyes','f',_A],
+  ['Can\'t clear infections despite actively following treatment protocols','f',_A],
+  ['Sore or swollen breast tissue','f',_A],
+  ['Heart palpitations or irregular heartbeat','f',_A],
+  ['Light, sound, or EMF sensitivities','f',_A],
+  ['Swollen lymph glands','f',_A],
+  ['★ Varicose or spider veins','f',_B],
+  ['Kidney problems','f',_A],
+  ['Breathing or lung issues','f',_A],
+  ['Skin does not sweat normally','f',_A],
+  ['Puffy eyes, especially on waking','f',_A],
+]},
+
+// ══════════════════════════════════════════════════
+// NUTRIENT & THYROID STATUS
+// ══════════════════════════════════════════════════
+// Kept only items NOT in MC Scorecard (removed: muscle cramping, bone loss, crave salt, edema, urination, thirst — all in MC)
+{ id:'minerals', title:'Minerals & Electrolytes — Deficiency Markers',
+  group:'Nutrient & Thyroid Status',
+  g:[0,5], y:[6,12], r:[13,30], questions:[
+  ['Unable to hold breath for long periods (less than 20 seconds comfortably)','f',_A],
+  ['Shallow or rapid breathing at rest','f',_A],
+  ['History of carpal tunnel syndrome','yn',[0,1]],
+  ['History of lower right abdominal pains or ileocecal valve problems','yn',[0,1]],
+  ['History of stress fracture(s)','yn',[0,1]],
+  ['Whites of eyes (sclera) have a blue tint','f',_A],
+  ['White spots on fingernails','f',_A],
+  ['Crave chocolate specifically (magnesium marker)','f',_A],
+  ['Feet have a consistently strong odor','f',_A],
+]},
+
+// Trimmed: removed items covered by MC Scorecard Hormone section (fatigue, hair loss, libido, constipation, depression, weight gain)
+// Kept: cold intolerance, excessive sleep, eyebrow thinning, dry skin pattern, menstrual bleeding
+{ id:'hypothyroid', title:'Hypothyroid — Distinguishing Indicators',
+  group:'Nutrient & Thyroid Status',
+  g:[0,5], y:[6,12], r:[13,28], questions:[
+  ['Feel cold — hands, feet, or whole body most of the time','f',_A],
+  ['Require excessive sleep (10+ hours) just to function','f',_A],
+  ['★ Thinning of the outer third of eyebrows (highly specific to hypothyroid)','f',_B],
+  ['Diffuse hair thinning on scalp including lateral eyebrows and outer arms','f',_A],
+  ['Dry, rough skin particularly on heels, elbows, and shins','f',_A],
+  ['Heavy or profuse menstrual bleeding (women only)','f',_A],
+]},
+
+{ id:'hyperthyroid', title:'Hyperthyroid',
+  group:'Nutrient & Thyroid Status',
+  g:[0,5], y:[6,10], r:[11,24], questions:[
+  ['Heart palpitations or pounding heart at rest','f',_A],
+  ['Inward trembling or internal vibrating sensation','f',_A],
+  ['Increased pulse even when resting','f',_A],
+  ['Nervous, emotional, or unable to relax','f',_A],
+  ['Insomnia','f',_A],
+  ['Night sweats','f',_A],
+  ['Eyes appear bulging or protruding','f',_A],
+  ['Difficulty gaining or maintaining weight','f',_A],
+]},
+
+// ══════════════════════════════════════════════════
+// HPA AXIS & AUTONOMIC
+// ══════════════════════════════════════════════════
+// Trimmed: removed items in MC Scorecard Hormone section (crave salt, energy dips, hard to calm, slow in AM, fatigue)
+// Kept: unique HPA framing items not in MC Scorecard
+{ id:'hpa', title:'HPA Axis / Adrenal Dysfunction — Unique Indicators',
+  group:'HPA Axis & Autonomic Nervous System',
+  g:[0,8], y:[9,20], r:[21,54], questions:[
+  ['★ "Wired but tired" — exhausted but unable to relax or sleep','f',_B],
+  ['Second wind of energy late in the evening (10pm or later)','f',_A],
+  ['Hypoglycemia symptoms when meals are delayed (shaking, panic, severe irritability)','f',_A],
+  ['Exercise consistently makes you feel worse, not better','f',_A],
+  ['Very slow recovery after illness, injury, or physical exertion','f',_A],
+  ['★ Hypervigilance or exaggerated startle response (easily startled)','f',_B],
+  ['Difficulty calming down after a stressful event — still activated hours later','f',_A],
+  ['History of burnout, chronic stress overload, or trauma','yn',[0,1]],
+  ['Low cortisol or DHEA confirmed on lab testing','yn',[0,1]],
+]},
+
+{ id:'pots', title:'POTS / Dysautonomia',
+  group:'HPA Axis & Autonomic Nervous System',
+  g:[0,10], y:[11,25], r:[26,80],
+  bartNote:'★ = Hallmark item. A pattern sometimes seen with POTS/dysautonomia — characterised by orthostatic heart rate changes (≥30 bpm on standing) and autonomic symptoms. This is a screening indicator, not diagnostic. Helps guide whether formal tilt-table or autonomic testing is a priority.',
+  questions:[
+  ['— Orthostatic & Standing Intolerance —','sub'],
+  ['★ Heart rate increases dramatically on standing — feel it pounding or racing when upright','f',_B],
+  ['★ Presyncope (near-fainting) or syncope (fainting) when standing','f',_B],
+  ['★ Brain fog and confusion that is clearly worse when upright','f',_B],
+  ['★ Nausea when upright that improves significantly when lying down','f',_B],
+  ['Blurred vision or graying-out when standing','f',_A],
+  ['Lightheadedness or dizziness upon standing','f',_A],
+  ['Feel significantly better lying flat vs. sitting or standing','f',_A],
+  ['Symptoms worsen with prolonged standing (stores, events, showers)','f',_A],
+  ['— Autonomic & Circulatory —','sub'],
+  ['Hands and feet turn purple, blue, or mottled when hanging down','f',_A],
+  ['Cold hands and feet despite normal room temperature','f',_A],
+  ['Chest pain or tightness that worsens when upright','f',_A],
+  ['Blood pooling in legs — legs feel heavy or achy when standing','f',_A],
+  ['— Exercise & Activity Intolerance —','sub'],
+  ['★ Severe exercise intolerance with prolonged symptom flare afterward (PEM)','f',_B],
+  ['Symptoms worsen significantly in heat (showers, summer, hot cars)','f',_A],
+  ['— GI & Neurological Autonomic —','sub'],
+  ['Headaches that are worse when upright and better lying down','f',_A],
+  ['GI dysmotility — bloating, nausea, early satiety not explained by gut testing','f',_A],
+  ['Anxiety or panic with a clear physical, heart-pounding quality','f',_A],
+  ['— Context & History —','sub'],
+  ['Symptoms began or worsened after viral infection (EBV, COVID, etc.)','yn',[0,1]],
+  ['Diagnosis of Ehlers-Danlos syndrome (EDS) or hypermobility','yn',[0,1]],
+  ['Tilt table test performed — positive or borderline result','yn',[0,1]],
+]},
+
+// ══════════════════════════════════════════════════
+// PATHOGENS
+// ══════════════════════════════════════════════════
+{ id:'parasites', title:'Parasite Infection',
+  group:'Pathogens',
+  g:[0,46], y:[47,96], r:[97,242], questions:[
+  ['Restless sleep — toss, turn, or wake up often','f',_A],
+  ['Skin issues, rashes, itches, hives, eczema, or acne','f',_B],
+  ['Frequent diarrhea or loose stools','f',_A],
+  ['Alternating constipation and diarrhea','f',_A],
+  ['SIBO-like bloating or gas','f',_A],
+  ['Bowel urgency, occasional accidents','f',_A],
+  ['Abdominal pains, cramps, or burning','f',_B],
+  ['Rectal or anal itching','f',_B],
+  ['Anal fissures (painful cracks)','f',_A],
+  ['Stomach or small intestinal ulcers or lesions','f',_B],
+  ['Grinding of teeth when asleep (bruxism)','f',_B],
+  ['Picking at or boring nose with finger','f',_B],
+  ['Excess or scab-like boogers in nose','f',_A],
+  ['Fingernail biting','f',_B],
+  ['Headaches or migraines','f',_A],
+  ['Irritable with no apparent reason','f',_A],
+  ['Mood disorder, depression, anxiety, or suicidal thoughts','f',_A],
+  ['Hyperactive tendency or nervous energy','f',_B],
+  ['Dark circles under eyes','f',_A],
+  ['Need for extra sleep, wake unrefreshed','f',_H],
+  ['Allergies and/or food sensitivities','f',_A],
+  ['Fevers of unknown origin','f',_A],
+  ['Night sweats (not menopausal)','f',_D],
+  ['Kiss pets or allow pets to lick your face','f',_I],
+  ['Symptoms increase around a full moon','f',_D],
+  ['Anemia (low iron/hemoglobin on blood test)','f',_B],
+  ['Iron deficiency','f',_B],
+  ['Vitamin B6 deficiency','f',_B],
+  ['Zinc deficiency and/or white spots on nails','f',_A],
+  ['Frequent colds, flu, or sore throats','f',_A],
+  ['Travel in developing nations','f',_B],
+  ['Eat pork products','f',_A],
+  ['Eat sushi or raw fish','f',_B],
+  ['Sleep with pets on bed','f',_A],
+  ['Bed-wetting','f',_A],
+  ['Frequent vomiting','f',_A],
+  ['Loss of appetite','f',_L],
+  ['Hungry all the time or still hungry after meals','f',_B],
+  ['Strong sugar and processed food cravings','f',_A],
+  ['Breathing problems or asthma','f',_B],
+  ['Pain in belly button area','f',_D],
+  ['Blurry or unclear vision','f',_A],
+  ['Eye floaters','f',_B],
+  ['Lethargy or apathy (disinterest)','f',_A],
+  ['Menstrual problems','f',_A],
+  ['Dry lips','f',_A],
+  ['Drooling while asleep','f',_A],
+  ['Swim in creeks, rivers, or lakes','f',_B],
+  ['History of Giardia, pinworms, or other parasites?','yn',[0,1]],
+  ['Work in childcare?','yn',[0,1]],
+  ['History of or currently have cancer?','yn',[0,1]],
+]},
+
+{ id:'sibo', title:'SIBO (Small Intestinal Bacterial Overgrowth)',
+  group:'Pathogens',
+  g:[0,1], y:[2,4], r:[5,12], questions:[
+  ['Abdominal distention after consuming fiber, starches, or sugar','f',_A],
+  ['Abdominal distention after taking probiotics or digestive supplements','f',_A],
+  ['Bloating or noisy gut after eating healthy vegetables','f',_A],
+  ['Bloating or feeling full just below the rib cage','f',_A],
+]},
+
+// ══════════════════════════════════════════════════
+// LYME & CO-INFECTIONS
+// ══════════════════════════════════════════════════
+{ id:'lymerisks', title:'Lyme Disease — Risk Factors',
+  group:'Lyme & Co-Infections',
+  g:[0,9], y:[10,18], r:[19,59], questions:[
+  ['Ever diagnosed with Lyme disease?','yn',[0,1]],
+  ['Dry sockets or infected tooth extractions','f',_A],
+  ['Ever bitten by a tick?','yn',[0,1]],
+  ['Ever had a bullseye rash on any part of your body?','yn',[0,1]],
+  ['Mother ever diagnosed with Lyme disease?','yn',[0,1]],
+  ['Partner or close family member diagnosed with Lyme disease?','yn',[0,1]],
+  ['Ever diagnosed with CFS, fibromyalgia, lupus, RA, MS, or autoimmune condition?','yn',[0,1]],
+  ['Ever diagnosed with Parkinson\'s, Alzheimer\'s, or Tourette\'s syndrome?','yn',[0,1]],
+  ['Frequently camp, hunt, hike, or do outdoor activities?','yn',[0,1]],
+  ['History of heart murmur or mitral valve prolapse?','yn',[0,1]],
+]},
+
+{ id:'lymesymptoms', title:'Lyme Disease — Current Symptoms',
+  group:'Lyme & Co-Infections',
+  g:[0,31], y:[32,95], r:[96,230],
+  bartNote:'Symptoms that may be associated with active or chronic Lyme disease. Many of these symptoms can be seen in other conditions. This is a screening indicator, not diagnostic — helps guide follow-up questions and testing priorities.',
+  questions:[
+  ['Arthritis-like joint pain or swelling','f',_B],
+  ['Pain that migrates to different areas of body','f',_B],
+  ['Forgetfulness or poor short-term memory','f',_B],
+  ['Confusion, difficulty thinking','f',_A],
+  ['Disorientation — getting lost or going to wrong places','f',_A],
+  ['Difficulty with speech or writing','f',_C],
+  ['Tingling, numbness, burning, or stabbing sensations','f',_C],
+  ['Disturbed sleep — too much, too little, or early awakening','f',_B],
+  ['Unexplained fevers, sweats, chills, or flushing','f',_A],
+  ['Unexplained weight change (loss or gain)','f',_A],
+  ['Difficulty swallowing','f',_A],
+  ['Fatigue, lack of energy','f',_A],
+  ['Sore throat or swollen glands','f',_A],
+  ['Pelvic or testicular pain','f',_C],
+  ['Crepitus — joint cracking','f',_C],
+  ['Stiff neck','f',_B],
+  ['Muscle twitching','f',_A],
+  ['Muscle pain or cramps','f',_A],
+  ['Costochondritis — sternum/rib junction pain','f',_C],
+  ['Right shoulder or AC joint pain','f',_A],
+  ['Facial paralysis (Bell\'s palsy)','f',_C],
+  ['Unexplained menstrual irregularity','f',_C],
+  ['Irritable bladder or bladder dysfunction','f',_C],
+  ['Sexual dysfunction or low libido','f',_C],
+  ['Blurry or double vision','f',_A],
+  ['Ear buzzing, ringing, or pain','f',_A],
+  ['Vertigo or increased motion sickness','f',_C],
+  ['Light-headedness, poor balance, or difficulty walking','f',_C],
+  ['Woozy — mentally unclear or hazy','f',_B],
+  ['Tremors','f',_B],
+  ['Headaches','f',_A],
+  ['Impulsivity, aggression, or bipolar-like behavior','f',_A],
+  ['Depression','f',_A],
+  ['Hallucinations, paranoia, or schizophrenia-like symptoms','f',_B],
+  ['Panic attacks','f',_A],
+  ['Pulse skips','f',_C],
+  ['Skin hypersensitivity','f',_B],
+  ['Gastrointestinal problems','f',_C],
+  ['Change in bowel function','f',_C],
+]},
+
+{ id:'babesia', title:'Babesia',
+  group:'Lyme & Co-Infections',
+  g:[0,29], y:[30,60], r:[61,146],
+  bartNote:'Symptoms that can be seen in Babesia co-infection. Scores reflect a pattern sometimes seen with this tick-borne pathogen — a screening indicator, not diagnostic. Helps guide testing priorities.',
+  questions:[
+  ['Abdominal pain','f',_B],
+  ['Shortness of breath','f',_A],
+  ['★ Air hunger — episodes of breathlessness or need to sigh deeply','f',_E],
+  ['Anemia (low iron/hemoglobin on blood test)','f',_A],
+  ['Low back stiffness or pain','f',_A],
+  ['Low blood sugar episodes','f',_B],
+  ['Cough','f',_A],
+  ['★ Disturbed sleep — frequent waking','f',_C],
+  ['Excessive sleepiness','f',_A],
+  ['Encephalopathy — brain malfunction or brain issues','f',_A],
+  ['Fatigue, tiredness, poor stamina','f',_A],
+  ['Fevers','f',_A],
+  ['★ Headaches','f',_C],
+  ['Hemolysis — destruction of red blood cells','f',_B],
+  ['Enlarged liver','f',_B],
+  ['Imbalance','f',_B],
+  ['Generalized ill feeling','f',_A],
+  ['Muscle pains or cramps','f',_A],
+  ['Nausea or vomiting','f',_B],
+  ['Neck stiffness or pain','f',_A],
+  ['Night sweats','f',_A],
+  ['Poor appetite','f',_B],
+  ['★ Shaking chills','f',_C],
+  ['Enlarged spleen','f',_A],
+  ['★ Heart palpitations, pulse skips, or tachycardia','f',_C],
+  ['★ Dark urine with or without blood','f',_C],
+  ['Weakness','f',_A],
+  ['Weight loss','f',_A],
+  ['Elevated sedimentation (sed) rate on lab test','f',_A],
+  ['Dizziness','f',_A],
+  ['Light headedness','f',_A],
+]},
+
+{ id:'bartonella', title:'Bartonella',
+  group:'Lyme & Co-Infections',
+  g:[0,30], y:[31,80], r:[81,228],
+  bartNote:'★ = Hallmark symptom (counts double). Rate based on the past 6–12 months. Scores reflect a pattern sometimes seen with Bartonella — a screening indicator, not diagnostic. Many of these symptoms can be seen in other conditions. Helps guide follow-up questions and testing priorities.',
+  questions:[
+  ['— General & Constitutional —','sub'],
+  ['Persistent fatigue despite adequate rest','f',_A],
+  ['Low-grade fevers or sticky sweats','f',_A],
+  ['Night sweats or unexplained temperature swings','f',_A],
+  ['Poor sleep quality, nightmares, or insomnia','f',_A],
+  ['Post-exertional symptom flare — symptoms worsen after activity','f',_A],
+  ['— Neuropsychiatric: Mood & Behaviour —','sub'],
+  ['★ Rage or explosive anger out of proportion to situation','f',_B],
+  ['★ Marked irritability or agitation (not explained by other causes)','f',_B],
+  ['★ Sudden-onset OCD, tics, or PANS/PANDAS-like symptoms','f',_B],
+  ['Anxiety or panic attacks','f',_A],
+  ['Obsessive thoughts or compulsions','f',_A],
+  ['Depression, sadness, or mood swings','f',_A],
+  ['★ Hallucinations','f',_B],
+  ['★ Paranoid thoughts or unusual fears','f',_B],
+  ['— Neurocognitive & Sensory —','sub'],
+  ['Brain fog or confusion','f',_A],
+  ['Poor concentration or distractibility','f',_A],
+  ['Short-term memory lapses','f',_A],
+  ['Derealization or depersonalization','f',_A],
+  ['Sensory hypersensitivity (light, sound, touch, smell)','f',_A],
+  ['— Head, Eyes & Ears —','sub'],
+  ['Frontal headaches or migraines','f',_A],
+  ['Dizziness or vertigo','f',_A],
+  ['Tinnitus (ear ringing, buzzing, or pressure)','f',_A],
+  ['Blurred vision or difficulty focusing','f',_A],
+  ['Eye pain or pressure','f',_A],
+  ['Eye floaters or visual snow','f',_A],
+  ['Red or irritated eyes','f',_A],
+  ['Neck or base-of-skull pain or stiffness','f',_A],
+  ['— Musculoskeletal & Neuropathic —','sub'],
+  ['★ Morning foot, heel, or arch pain on first steps','f',_B],
+  ['★ Tight or painful Achilles tendon or plantar fascia','f',_B],
+  ['★ Burning, tingling, or vibrating sensations in feet or toes','f',_B],
+  ['★ Deep bone pain — shins, ankles, or feet','f',_B],
+  ['★ Shinbone (tibia) pain or tenderness','f',_B],
+  ['Muscle twitching, cramps, or spasms','f',_A],
+  ['Migratory joint or tendon pain','f',_A],
+  ['Muscle pains or cramps especially in calves','f',_A],
+  ['— Skin & Vascular —','sub'],
+  ['★ Stretch mark-like striae not from weight gain','f',_B],
+  ['★ Spider veins or new vascular streaks','f',_B],
+  ['★ Small angioma-like red or purple bumps (maculopapular rash)','f',_B],
+  ['★ Tender subcutaneous nodules or lumps under skin','f',_B],
+  ['Red or purple streaks that worsen with heat or stress','f',_A],
+  ['Jaundice (yellowing of skin)','f',_A],
+  ['— Gastrointestinal —','sub'],
+  ['Nausea or stomach upset','f',_A],
+  ['Abdominal pain, cramping, or bloating','f',_A],
+  ['IBS-like alternating constipation and diarrhea','f',_A],
+  ['New food intolerances or sensitivities','f',_A],
+  ['Loss of appetite or unintended weight loss','f',_A],
+  ['— Immune & Lymphatic —','sub'],
+  ['Swollen or tender lymph nodes','f',_B],
+  ['Recurrent sore throats or flu-like episodes','f',_A],
+  ['Enlarged liver or spleen','f',_A],
+  ['History of mono-like illness that never fully resolved','f',_A],
+  ['— Autonomic, Cardiovascular & Urogenital —','sub'],
+  ['★ Urinary frequency, urgency, or bladder pain (IC-like)','f',_B],
+  ['Chest pain, palpitations, or irregular heartbeat','f',_A],
+  ['Shortness of breath or air hunger','f',_A],
+  ['Lightheadedness worsening when standing (POTS-like)','f',_A],
+  ['Seizures','f',_A],
+  ['— Exposure History (not scored) —','sub'],
+  ['Close contact with cats or kittens (scratches or bites)','exp'],
+  ['History of flea, lice, or bedbug infestations','exp'],
+  ['History of tick bites or Lyme disease','exp'],
+  ['Frequent animal contact (horses, vets, shelters, farm animals)','exp'],
+  ['Symptoms began after a bite, scratch, or infestation','exp'],
+]},
+
+// ══════════════════════════════════════════════════
+// IMMUNE DYSREGULATION
+// ══════════════════════════════════════════════════
+{ id:'mcas', title:'Mast Cell Activation Syndrome (MCAS)',
+  group:'Immune Dysregulation',
+  g:[0,15], y:[16,40], r:[41,130],
+  bartNote:'★ = Hallmark item (×2). A pattern that may be associated with MCAS can be seen when symptoms recur across multiple organ systems. This is a screening indicator, not diagnostic. Helps guide follow-up questions, testing priorities, and whether formal MCAS workup is warranted.',
+  questions:[
+  ['— Core Diagnostic Indicators —','sub'],
+  ['★ Spontaneous urticaria (hives) appearing and disappearing without known cause','f',_B],
+  ['★ Angioedema — swelling of lips, tongue, throat, or face','f',_B],
+  ['★ Anaphylaxis or near-anaphylaxis (epinephrine use or ER visits)','f',_B],
+  ['★ Symptoms triggered by many unrelated things (foods, smells, heat, cold, stress, exertion)','f',_B],
+  ['★ Dermatographism — firm scratching leaves raised red welts','f',_B],
+  ['★ Flushing — sudden redness/warmth of face/neck/chest without cause','f',_B],
+  ['★ Symptoms clearly improve with antihistamines or mast cell stabilizers','f',_B],
+  ['— Skin & Mucous Membranes —','sub'],
+  ['Itching without visible rash (pruritus)','f',_A],
+  ['Rashes or flushing triggered by heat, exercise, or stress','f',_A],
+  ['Rosacea or persistent facial redness','f',_A],
+  ['Sensitive skin — reactions to fabrics or products most tolerate','f',_A],
+  ['Nasal congestion or sneezing with no clear allergen','f',_A],
+  ['— Gastrointestinal —','sub'],
+  ['★ Nausea or vomiting with no clear GI cause','f',_B],
+  ['Abdominal cramping or pain that comes and goes','f',_A],
+  ['Diarrhea triggered by foods others tolerate','f',_A],
+  ['Multiple food intolerances across unrelated food categories','f',_A],
+  ['Reaction to high-histamine foods: wine, aged cheese, fermented foods, vinegar, processed meats','f',_A],
+  ['— Cardiovascular & Autonomic —','sub'],
+  ['★ Presyncope or fainting triggered by standing, heat, or eating','f',_B],
+  ['Palpitations or rapid heart rate triggered by food, smell, or stress','f',_A],
+  ['Low blood pressure or blood pressure fluctuations','f',_A],
+  ['— Neurological —','sub'],
+  ['Brain fog triggered by specific exposures (foods, smells, chemicals)','f',_A],
+  ['Headaches or migraines triggered by environmental factors','f',_A],
+  ['Neuropathic pain or burning not explained by other diagnosis','f',_A],
+  ['— Musculoskeletal —','sub'],
+  ['★ Unexplained osteoporosis, especially in younger or male patients','f',_B],
+  ['Bone pain or joint pain without inflammatory marker elevation','f',_A],
+  ['— Triggers & Chemical Sensitivities —','sub'],
+  ['★ Reaction to NSAIDs (ibuprofen/aspirin) — flushing, hives, or GI upset','f',_B],
+  ['Strong perfumes or cleaning products trigger symptoms','f',_A],
+  ['Exercise triggers flushing, hives, or GI symptoms','f',_A],
+  ['Heat or cold exposure triggers urticaria or systemic symptoms','f',_A],
+  ['Insect stings cause disproportionately severe reactions','f',_A],
+  ['— History & Context —','sub'],
+  ['Family history of allergies, mastocytosis, or anaphylaxis','yn',[0,1]],
+  ['Diagnosis of interstitial cystitis, IBS, fibromyalgia, or POTS','yn',[0,1]],
+  ['History of Lyme disease, mold illness, or EBV/viral trigger','yn',[0,1]],
+]},
+
+// ══════════════════════════════════════════════════
+// TOXICANTS & TOXINS
+// ══════════════════════════════════════════════════
+// Trimmed: removed Y/N lifestyle exposure items already in Lifestyle & Medical History form
+// Kept: symptom items and clinical exposure indicators not in Lifestyle form
+{ id:'generaltox', title:'General Toxicity — Symptom Burden',
+  group:'Toxicants & Toxins',
+  g:[0,14], y:[15,35], r:[36,75],
+  bartNote:'Symptom patterns that may be associated with cumulative toxic burden. Many of these symptoms overlap across conditions. This is a screening indicator, not diagnostic — helps guide follow-up questions and testing priorities.',
+  questions:[
+  ['Receive excessive static shocks compared to others around you','f',_A],
+  ['Word reversal or trouble finding words','f',_A],
+  ['Sensitivity to skin or light touch (allodynia-like)','f',_A],
+  ['Difficulty losing weight regardless of diet or exercise','f',_A],
+  ['Excessive perspiring day or night not related to hormones','f',_A],
+  ['Issues processing new information or concept shifting','f',_A],
+  ['Chronic fungal or viral infection (Candida, foot fungus, warts)','f',_A],
+  ['Weakness or numbness in extremities','f',_A],
+  ['Muscle twitching','f',_A],
+  ['Appetite swings','f',_A],
+  ['Rashes or rosacea','f',_A],
+]},
+
+{ id:'radioactive', title:'Radioactive Elements',
+  group:'Toxicants & Toxins',
+  g:[0,16], y:[17,40], r:[41,146], questions:[
+  ['History of or currently have cancer?','yn',[0,1]],
+  ['Suppressed immune system?','yn',[0,1]],
+  ['Osteoporosis or osteopenia diagnosis?','yn',[0,1]],
+  ['Can\'t clear infections despite following pathogen protocols?','yn',[0,1]],
+  ['Chronic Candida infection','f',_B],
+  ['Fatigue','f',_B],
+  ['Anemia','f',_B],
+  ['Skin changes — red, dry, itchy, or color changes','f',_A],
+  ['Hair loss','f',_B],
+  ['Loss of appetite','f',_A],
+  ['Nausea and vomiting','f',_A],
+  ['Low blood cell count','f',_A],
+  ['Seizures','f',_A],
+  ['Earaches or difficulty hearing','f',_A],
+  ['Hormone problems','f',_A],
+  ['Sore or dry mouth','f',_A],
+  ['Taste changes','f',_A],
+  ['Difficulty swallowing','f',_B],
+  ['Voice changes or hoarseness','f',_A],
+  ['Dry eyes','f',_A],
+  ['Stiff jaw','f',_A],
+  ['Tooth decay','f',_A],
+  ['Heart palpitations','f',_B],
+  ['Irregular heartbeat','f',_A],
+  ['Stomach ulcers','f',_B],
+  ['Kidney problems','f',_A],
+  ['Bladder infection (cystitis)','f',_B],
+  ['Fertility problems','f',_A],
+]},
+
+// Mercury: removed Y/N amalgam questions (covered by Lifestyle form "metal fillings")
+// Kept: clinical exposure items not in Lifestyle form + all symptom items
+{ id:'mercury', title:'Mercury Toxicity',
+  group:'Toxicants & Toxins',
+  g:[0,20], y:[21,50], r:[51,110], questions:[
+  ['Worked in a dental office?','f',_A],
+  ['Have had flu shots','f',_A],
+  ['Have had allergy shots','f',_A],
+  ['Eat tuna, shark, swordfish, or Atlantic salmon more than twice/week','f',_A],
+  ['Urinate frequently (day, night, or both)','f',_A],
+  ['Sleep issues','f',_A],
+  ['Anxiety','f',_A],
+  ['Mood swings','f',_A],
+  ['Anger for no apparent reason','f',_A],
+  ['Excessive shyness, timidity, or social phobia (not typical to personality)','f',_A],
+  ['Irritability (not typical to personality)','f',_A],
+  ['Dizzy or balance issues','f',_A],
+  ['Insomnia','f',_A],
+  ['Low body temperature (below 97.5°F / 36.4°C)','f',_A],
+  ['Sound in ears — ringing or hearing your own heartbeat','f',_A],
+  ['Psychological symptoms, even thoughts of suicide','f',_A],
+  ['Sound sensitivities','f',_A],
+]},
+
+// Lead: kept most items as they're not well-covered in Lifestyle form
+// Trimmed: removed obvious MC Scorecard overlaps (depression, dry skin, anemia as isolated symptoms)
+{ id:'lead', title:'Lead Toxicity',
+  group:'Toxicants & Toxins',
+  g:[0,30], y:[31,55], r:[56,110], questions:[
+  ['Lived in a home built before 1978','f',_B],
+  ['Do home renovation (sandblasting, moving walls)','f',_B],
+  ['Lived in a mining community or near industrial area','f',_B],
+  ['Involved in construction, soldering, metal salvage, or stained glass','f',_B],
+  ['Handle electrical devices, wiring, ballasts, or TV glass','f',_B],
+  ['Handle/make ceramics, brass, bronze, or crystal','f',_B],
+  ['Handle and/or reload ammunition','f',_B],
+  ['Read newspaper regularly before 1985','f',_B],
+  ['Take or took coral calcium supplement','f',_B],
+  ['Wear lipstick','f',_B],
+  ['Around fake leather or vinyl frequently','f',_B],
+  ['Get hair colored','f',_B],
+  ['Get stomachaches in the morning','f',_A],
+  ['Eyelid swelling','f',_A],
+  ['Eyelid twitching','f',_A],
+  ['Chest or heart pain','f',_A],
+  ['Metallic taste in mouth','f',_A],
+  ['Teeth sensitivity','f',_A],
+  ['Bleeding gums','f',_A],
+  ['High blood pressure','f',_A],
+  ['Inability to decide or indecisiveness','f',_A],
+  ['Overwhelmed or fearful feeling','f',_A],
+  ['Dyslexia or loss of place while reading, even as a child','f',_A],
+  ['Gout — arthritic pain especially in big toes','f',_A],
+]},
+
+{ id:'arsenic', title:'Arsenic Toxicity',
+  group:'Toxicants & Toxins',
+  g:[0,12], y:[13,28], r:[29,90], questions:[
+  ['Drink well water or unfiltered groundwater','yn',[0,1]],
+  ['Eat rice or rice products daily','f',_A],
+  ['Eat shellfish, seaweed, or high-seafood diet regularly','f',_A],
+  ['History of occupational pesticide exposure (farming, landscaping)','yn',[0,1]],
+  ['Work in or near smelting, glass manufacturing, or semiconductor industry','yn',[0,1]],
+  ['History of living near a Superfund site, mine, or industrial area','yn',[0,1]],
+  ['★ Hyperkeratosis — rough thickened skin patches on palms, soles, or trunk','f',_B],
+  ['★ Mees\' lines — white transverse bands across fingernails','f',_B],
+  ['★ Peripheral neuropathy — burning, tingling, or numbness in hands/feet','f',_B],
+  ['Unusual skin pigmentation changes (darker or lighter patches)','f',_A],
+  ['GI symptoms — nausea, vomiting, diarrhea without clear cause','f',_A],
+  ['Peripheral vascular signs (coldness or discoloration of extremities)','f',_A],
+  ['Raynaud\'s-like symptoms (fingers/toes turn white or blue in cold)','f',_A],
+  ['History of bladder or kidney issues','f',_A],
+  ['Unexplained anemia or low blood counts','f',_A],
+  ['Warts or unusual skin growths','f',_A],
+  ['Hair loss or brittle hair','f',_A],
+]},
+
+{ id:'cadmium', title:'Cadmium Toxicity',
+  group:'Toxicants & Toxins',
+  g:[0,10], y:[11,24], r:[25,84], questions:[
+  ['Current or former smoker','yn',[0,1]],
+  ['Significant secondhand smoke exposure over many years','f',_A],
+  ['Work in battery manufacturing, welding, electroplating, or pigment production','yn',[0,1]],
+  ['Eat shellfish (especially oysters) or organ meats frequently','f',_A],
+  ['Grow or eat food from soil previously used for mining or industry','yn',[0,1]],
+  ['★ Osteoporosis, osteopenia, or stress fractures — especially in women','f',_B],
+  ['★ Kidney dysfunction — protein in urine, decreased GFR, or kidney stones','f',_B],
+  ['★ Severe bone pain, joint pain, or muscle weakness (Itai-itai-like)','f',_B],
+  ['Chronic lower back pain or hip pain','f',_A],
+  ['Frequent urination or unusual urine odor','f',_A],
+  ['Yellow discoloration of teeth','f',_A],
+  ['Lung issues — chronic bronchitis, emphysema (especially with smoking)','f',_A],
+  ['History of prostate or breast cancer','yn',[0,1]],
+]},
+
+{ id:'aluminum', title:'Aluminum Toxicity',
+  group:'Toxicants & Toxins',
+  g:[0,10], y:[11,24], r:[25,84], questions:[
+  ['Use conventional antiperspirant/deodorant containing aluminum','f',_A],
+  ['Cook regularly with aluminum cookware or foil with acidic foods','f',_A],
+  ['Take antacids regularly (many contain aluminum hydroxide)','f',_A],
+  ['Received many vaccines with aluminum adjuvants','yn',[0,1]],
+  ['Work in aluminum smelting, welding, or manufacturing','yn',[0,1]],
+  ['Use conventional cosmetics or skincare with aluminum compounds','f',_A],
+  ['★ Progressive memory loss or cognitive decline','f',_B],
+  ['★ Bone pain, muscle weakness, or unexplained fractures','f',_B],
+  ['★ Dialysis patient or history of kidney failure (highest exposure risk)','yn',[0,1]],
+  ['Word-finding difficulty, slowed speech, or confusion','f',_A],
+  ['Tremors or loss of coordination','f',_A],
+  ['Personality or behavioral changes (irritability, aggression)','f',_A],
+  ['Anemia despite adequate iron intake','f',_A],
+  ['Autoimmune flares or ASIA-like symptoms after vaccine or implant','f',_A],
+]},
+
+{ id:'mold', title:'Mycotoxins / Mold & CIRS',
+  group:'Toxicants & Toxins',
+  g:[0,25], y:[26,70], r:[71,160],
+  bartNote:'★ = Hallmark item. Symptoms that may be associated with mycotoxin exposure and CIRS, based on Shoemaker CIRS cluster research and Dr. Jill Crista\'s clinical framework (Break the Mold). This is a screening indicator, not diagnostic. A high score helps guide follow-up environmental testing and CIRS workup priorities.',
+  questions:[
+  ['— Environmental Exposure & Building Correlation —','sub'],
+  ['★ Symptoms clearly improve when away from home or work for 3+ days','f',_B],
+  ['★ Symptoms return or worsen when back in the building','f',_B],
+  ['See visible mold growing at home, work, or school','yn',[0,1]],
+  ['History of water damage, flooding, or sewage backup at home/work','yn',[0,1]],
+  ['Home, workplace, or school has a musty or mildewy odor','f',_A],
+  ['Basement has ever been wet or flooded','yn',[0,1]],
+  ['Plumbing in kitchen or bathroom has leaked','yn',[0,1]],
+  ['Wet spots, water stains, or warped drywall in your home','yn',[0,1]],
+  ['Condensation regularly on windows or cold surfaces indoors','yn',[0,1]],
+  ['Car has a mildewy smell','yn',[0,1]],
+  ['Spending time in basement causes or worsens symptoms','f',_C],
+  ['Reactions to supplements opposite of expected (e.g., antifungals or binders cause flare)','f',_A],
+  ['Others in your household have similar unexplained symptoms','yn',[0,1]],
+  ['— Neurological & Cognitive (Shoemaker Clusters 8–9) —','sub'],
+  ['★ Brain fog — profound difficulty thinking clearly','f',_B],
+  ['★ Word-finding difficulty or substituting wrong words','f',_B],
+  ['★ Disorientation — confused, difficulty concentrating, getting lost','f',_B],
+  ['Poor short-term memory','f',_A],
+  ['Difficulty learning new information','f',_A],
+  ['Mental arithmetic or following sequences becomes difficult','f',_A],
+  ['Personality or behavioral changes noticed by others','f',_A],
+  ['Emotional lability — sudden mood shifts with no clear cause','f',_A],
+  ['— Fatigue & Pain (Shoemaker Clusters 1–2) —','sub'],
+  ['★ Extreme or unusual fatigue not explained by activity level','f',_B],
+  ['★ Ice pick pains — sudden stabbing pains in random locations','f',_B],
+  ['Weakness, achiness, or assorted unexplained pains','f',_A],
+  ['Morning stiffness in joints or muscles','f',_A],
+  ['Joint pain without injury','f',_A],
+  ['Frontal headaches or migraines','f',_A],
+  ['— Vision, Eyes & ENT (Shoemaker Clusters 3–4) —','sub'],
+  ['★ Light sensitivity — bright light causes pain or discomfort','f',_B],
+  ['Red or burning eyes','f',_A],
+  ['Blurry vision or difficulty focusing','f',_A],
+  ['Chronic sinus congestion, pressure, or pain','f',_A],
+  ['Recurrent sinus infections','f',_A],
+  ['Metallic or unusual taste in mouth','f',_A],
+  ['Hoarse voice or chronic throat clearing','f',_A],
+  ['— Respiratory (Shoemaker Cluster 5) —','sub'],
+  ['Unexplained or chronic cough','f',_A],
+  ['Wheezing or whistling in chest','f',_A],
+  ['Chest tightness on waking or in specific buildings','f',_A],
+  ['Shortness of breath during normal activity','f',_A],
+  ['— Autonomic (Shoemaker Clusters 11–13) —','sub'],
+  ['★ Unusual thirst with frequent urination not explained by diabetes','f',_B],
+  ['★ Static shocks — you experience them far more than others around you','f',_B],
+  ['Night sweats or unexplained temperature fluctuations','f',_A],
+  ['Temperature dysregulation — too hot or cold without reason','f',_A],
+  ['Tremors or involuntary twitching','f',_A],
+  ['Numbness or tingling in extremities','f',_A],
+  ['Sensitive to chemicals, fragrances, or exhaust fumes','f',_A],
+  ['Sensitive to EMFs or electrical devices','f',_A],
+  ['Irregular heartbeat or palpitations','f',_A],
+]},
+
+];
+
+// ─── RENDER (wrapped in DOMContentLoaded + try/catch for safety) ─────────
+const FL = ['Never','Occasionally','Often','Regularly'];
+
+document.addEventListener('DOMContentLoaded', function() {
+  try {
+    const root    = document.getElementById('form-root');
+    const sumBody = document.getElementById('sum-body');
+    if (!root)    throw new Error('Missing #form-root element');
+    if (!sumBody) throw new Error('Missing #sum-body element');
+
+    let curGroup = '';
+
+    SECTIONS.forEach((sec) => {
+      if (sec.group !== curGroup) {
+        curGroup = sec.group;
+        const gt = document.createElement('div');
+        gt.className = 'group-title';
+        gt.textContent = sec.group;
+        root.appendChild(gt);
+      }
+
+      const freqQs = sec.questions.filter(q => Array.isArray(q) && q[1]==='f');
+      const ynQs   = sec.questions.filter(q => Array.isArray(q) && q[1]==='yn');
+      const hasSub = sec.questions.some(q  => Array.isArray(q) && q[1]==='sub');
+
+      const card = document.createElement('div');
+      card.className = 'sec-card';
+      card.innerHTML = `<div class="sec-head"><h3>${sec.title}</h3><div class="sec-head-badge" id="hbadge_${sec.id}">Score: —</div></div>`;
+
+      if (sec.bartNote) {
+        const note = document.createElement('div');
+        note.className = 'barto-note';
+        note.textContent = sec.bartNote;
+        card.appendChild(note);
+      }
+
+      function makeFreqHeader() {
+        const ch = document.createElement('div');
+        ch.className = 'col-header-row';
+        ch.innerHTML = '<div class="ch-label">Symptom / Factor</div><div class="ch-label">Never<br><span class="ch-score-tag">0 pts</span></div><div class="ch-label">Occasionally<br><span class="ch-score-tag">low</span></div><div class="ch-label">Often<br><span class="ch-score-tag">mod</span></div><div class="ch-label">Regularly<br><span class="ch-score-tag">high</span></div>';
+        return ch;
+      }
+      function makeYnHeader() {
+        const yh = document.createElement('div');
+        yh.className = 'yn-col-header';
+        yh.innerHTML = '<div class="ych-label">Yes / No Question</div><div class="ych-label">No<br><span class="ch-score-tag">0 pts</span></div><div class="ych-label">Yes<br><span class="ch-score-tag">+pts</span></div>';
+        return yh;
+      }
+      function makeFreqRow(q, qi) {
+        const isH = q[2][1] >= 2 && q[0].startsWith('\u2605');
+        const row = document.createElement('div');
+        row.className = 'q-row' + (isH ? ' hallmark-row' : '');
+        const dt   = q[0].replace(/^\u2605\s*/, '');
+        const htag = isH ? '<span class="hallmark-tag">\u00d72 Hallmark</span>' : '';
+        const cells = q[2].map((val, fi) =>
+          '<div class="q-opt opt-' + fi + '"><input type="radio" name="' + sec.id + '_q' + qi + '" id="' + sec.id + '_q' + qi + '_' + fi + '" value="' + val + '" onchange="recalc(\'' + sec.id + '\')"><label for="' + sec.id + '_q' + qi + '_' + fi + '" title="' + FL[fi] + ' (' + val + ' pts)">' + val + '</label></div>'
+        ).join('');
+        row.innerHTML = '<div class="q-text">' + dt + htag + '</div>' + cells;
+        return row;
+      }
+      function makeYnRow(q, qi) {
+        const row = document.createElement('div');
+        row.className = 'yn-row';
+        row.innerHTML = '<div class="q-text">' + q[0] + '</div><div class="yn-opt yn-no"><input type="radio" name="' + sec.id + '_q' + qi + '" id="' + sec.id + '_q' + qi + '_n" value="' + q[2][0] + '" onchange="recalc(\'' + sec.id + '\')"><label for="' + sec.id + '_q' + qi + '_n">No</label></div><div class="yn-opt yn-yes"><input type="radio" name="' + sec.id + '_q' + qi + '" id="' + sec.id + '_q' + qi + '_y" value="' + q[2][1] + '" onchange="recalc(\'' + sec.id + '\')"><label for="' + sec.id + '_q' + qi + '_y">Yes</label></div>';
+        return row;
+      }
+
+      if (hasSub) {
+        let inF=false, inY=false, inE=false;
+        sec.questions.forEach((q, qi) => {
+          if (!Array.isArray(q)) return;
+          if (q[1]==='sub') {
+            inF=false; inY=false; inE=false;
+            const s=document.createElement('div'); s.className='sub-row';
+            s.textContent=q[0].replace(/^— | —$/g,''); card.appendChild(s); return;
+          }
+          if (q[1]==='exp') {
+            if (!inE) { inE=true; const eh=document.createElement('div'); eh.className='exp-header'; eh.innerHTML='<span>Exposure / History Factor</span><span>No</span><span>Yes</span>'; card.appendChild(eh); }
+            const r=document.createElement('div'); r.className='exp-row';
+            r.innerHTML='<div class="q-text">'+q[0]+'</div><div class="exp-opt"><input type="checkbox"></div><div class="exp-opt"><input type="checkbox"></div>';
+            card.appendChild(r); return;
+          }
+          if (q[1]==='f') { if (!inF) { inF=true; card.appendChild(makeFreqHeader()); } card.appendChild(makeFreqRow(q,qi)); return; }
+          if (q[1]==='yn') { if (!inY) { inY=true; card.appendChild(makeYnHeader()); } card.appendChild(makeYnRow(q,qi)); }
+        });
+      } else {
+        if (freqQs.length) { card.appendChild(makeFreqHeader()); sec.questions.forEach((q,qi)=>{ if(Array.isArray(q)&&q[1]==='f') card.appendChild(makeFreqRow(q,qi)); }); }
+        if (ynQs.length) {
+          if (freqQs.length) { const sep=document.createElement('div'); sep.className='block-sep'; card.appendChild(sep); }
+          card.appendChild(makeYnHeader());
+          sec.questions.forEach((q,qi)=>{ if(Array.isArray(q)&&q[1]==='yn') card.appendChild(makeYnRow(q,qi)); });
+        }
+      }
+
+      const footer = document.createElement('div');
+      footer.className = 'sec-score-footer';
+      footer.innerHTML = '<div class="ssf-left"><div class="ssf-label">Live Score Total \u2193</div><div class="ssf-number" id="snum_' + sec.id + '">0</div><div style="font-size:0.7rem;color:var(--k-muted);margin-left:4px;align-self:center">pts<br>(updates<br>as you answer)</div></div><div class="ssf-thresholds"><div class="thresh-box t-g" id="tb_g_' + sec.id + '"><div class="t-dot"></div>Green 0\u2013' + sec.g[1] + '</div><div class="thresh-box t-y" id="tb_y_' + sec.id + '"><div class="t-dot"></div>Yellow ' + sec.y[0] + '\u2013' + sec.y[1] + '</div><div class="thresh-box t-r" id="tb_r_' + sec.id + '"><div class="t-dot"></div>Red ' + sec.r[0] + '+</div></div><div class="ssf-status" id="sstat_' + sec.id + '">Not yet answered</div>';
+      card.appendChild(footer);
+      root.appendChild(card);
+
+      const tr = document.createElement('tr');
+      tr.innerHTML = '<td>' + sec.title + '</td><td class="td-score" id="sum_score_' + sec.id + '">\u2014</td><td id="sum_range_' + sec.id + '"><span class="spill-na">\u2014</span></td><td><span class="spill-g">0\u2013' + sec.g[1] + '</span></td><td><span class="spill-y">' + sec.y[0] + '\u2013' + sec.y[1] + '</span></td><td><span class="spill-r">' + sec.r[0] + '+</span></td>';
+      sumBody.appendChild(tr);
+    });
+
+    console.log('\u2705 Katalyst Assessment loaded:', SECTIONS.length, 'sections');
+
+  } catch(err) {
+    console.error('Assessment render failed:', err);
+    const root = document.getElementById('form-root');
+    if (root) root.innerHTML = '<div style="background:#fff3cd;color:#7a5800;border:2px solid #f0d080;padding:20px;border-radius:8px;margin:20px;font-family:sans-serif"><strong>Form failed to load.</strong><br>Error: ' + err.message + '<br><br>Please email katka@katalysthealth.us directly.</div>';
+  }
+});
+
+window.recalc = function(sid) {
+  const sec = SECTIONS.find(s => s.id === sid);
+  if (!sec) return;
+  let total = 0;
+  sec.questions.forEach((q,qi) => {
+    if (!Array.isArray(q) || q[1]==='sub' || q[1]==='exp') return;
+    const el = document.querySelector('input[name="' + sid + '_q' + qi + '"]:checked');
+    if (el) total += parseInt(el.value)||0;
+  });
+  const numEl  = document.getElementById('snum_'+sid);
+  const statEl = document.getElementById('sstat_'+sid);
+  const badgeEl= document.getElementById('hbadge_'+sid);
+  const sumSc  = document.getElementById('sum_score_'+sid);
+  const sumRng = document.getElementById('sum_range_'+sid);
+  if (!numEl) return;
+  numEl.textContent = total; sumSc.textContent = total;
+  ['g','y','r'].forEach(x => { const el=document.getElementById('tb_'+x+'_'+sid); if(el) el.className='thresh-box t-'+x; });
+  let range, label;
+  if (total<=sec.g[1])      { range='g'; label='\ud83d\udfe2 Green';  document.getElementById('tb_g_'+sid).className='thresh-box active-g'; badgeEl.style.background='rgba(45,122,79,0.35)'; }
+  else if (total<=sec.y[1]) { range='y'; label='\ud83d\udfe1 Yellow'; document.getElementById('tb_y_'+sid).className='thresh-box active-y'; badgeEl.style.background='rgba(122,88,0,0.35)'; }
+  else                      { range='r'; label='\ud83d\udd34 Red';    document.getElementById('tb_r_'+sid).className='thresh-box active-r'; badgeEl.style.background='rgba(139,26,26,0.35)'; }
+  const msgs={g:'\u2713 Green \u2014 Low pattern match',y:'\u26a0 Yellow \u2014 Pattern may warrant follow-up',r:'\u2716 Red \u2014 Strong pattern \u2014 priority for discussion'};
+  statEl.className='ssf-status s-'+range; statEl.textContent=msgs[range];
+  badgeEl.textContent='Score: '+total+'  |  '+label;
+  sumRng.innerHTML='<span class="spill-'+range+'">'+label+'</span>';
+};
+
+window.copyScores = function() {
+  const name = (document.querySelector('input[placeholder="Full name"]')||{}).value||'(not entered)';
+  const dateFields = document.querySelectorAll('input[placeholder="MM / DD / YYYY"]');
+  const date = (dateFields[1]||{}).value||'(not entered)';
+  const RL = {g:'\ud83d\udfe2 Green',y:'\ud83d\udfe1 Yellow',r:'\ud83d\udd34 Red','?':'\u25a1 Not completed'};
+  let lines = ['KATALYST HEALTH \u2014 ADVANCED CLINICAL ASSESSMENT','Client: '+name+'    Date: '+date,'\u2501'.repeat(54),''];
+  let lg='';
+  SECTIONS.forEach(sec=>{
+    if(sec.group!==lg){lg=sec.group;lines.push('\n\u2500\u2500 '+sec.group.toUpperCase()+' \u2500\u2500');}
+    const s=document.getElementById('snum_'+sec.id);
+    const score=s?s.textContent:'0'; const n=parseInt(score)||0;
+    let rk='?';
+    if(document.querySelector('input[name^="'+sec.id+'_"]:checked')){rk=n<=sec.g[1]?'g':n<=sec.y[1]?'y':'r';}
+    lines.push((sec.title.substring(0,40)+'                                          ').substring(0,42)+' Score:'+(('    '+score).slice(-4))+'  '+RL[rk]+'  [G:0-'+sec.g[1]+' Y:'+sec.y[0]+'-'+sec.y[1]+' R:'+sec.r[0]+'+]');
+  });
+  lines.push('','\u2501'.repeat(54),'Katalyst Health | katka@katalysthealth.us | 206-354-7242','katalystforhealth.com');
+  navigator.clipboard.writeText(lines.join('\n')).then(()=>{
+    const t=document.getElementById('copyToast'); if(t){t.style.display='block';setTimeout(()=>t.style.display='none',3000);}
+  }).catch(()=>alert('Please use the Print/PDF button instead.'));
+};
+</script>
+</body>
+</html>
