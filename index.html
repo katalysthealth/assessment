@@ -144,6 +144,26 @@ body{font-family:'Inter',sans-serif;background:var(--k-bg);color:var(--k-text);f
 .fab-copy{position:fixed;bottom:24px;right:220px;background:var(--k-dark);color:white;border:none;border-radius:50px;padding:13px 22px;font-family:'Inter',sans-serif;font-size:0.88rem;font-weight:600;cursor:pointer;box-shadow:0 4px 18px rgba(27,77,62,0.3);z-index:200;letter-spacing:0.02em;transition:all 0.2s}
 .fab-copy:hover{background:var(--k-mid);transform:translateY(-2px)}
 
+.wizard-header{text-align:center;padding:16px 20px 8px;background:white;border-bottom:1px solid var(--k-rule)}
+.step-dots{display:flex;justify-content:center;gap:8px;margin-bottom:6px}
+.step-dot{width:32px;height:32px;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;font-size:0.8rem;font-weight:600;font-family:'Inter',sans-serif;transition:all 0.2s}
+.step-dot.completed{background:var(--k-mid);color:white;cursor:pointer}
+.step-dot.completed:hover{background:var(--k-dark)}
+.step-dot.current{background:white;border:2px solid var(--k-mid);color:var(--k-mid)}
+.step-dot.future{background:#e0e0e0;color:#999}
+.step-label{font-size:0.82rem;color:var(--k-muted);font-family:'Inter',sans-serif}
+.wizard-step{display:none}
+.wizard-step.active{display:block}
+.wizard-nav{position:fixed;bottom:0;left:0;right:0;background:white;border-top:2px solid var(--k-rule);padding:12px 24px;display:flex;justify-content:space-between;align-items:center;z-index:150;font-family:'Inter',sans-serif}
+.wizard-nav button{padding:12px 28px;border-radius:8px;font-size:0.9rem;font-weight:600;cursor:pointer;transition:all 0.2s}
+.wiz-back{background:white;border:1px solid #ccc;color:var(--k-dark)}
+.wiz-back:hover{border-color:var(--k-dark)}
+.wiz-next{background:var(--k-mid);color:white;border:none}
+.wiz-next:hover{background:var(--k-dark)}
+.page-footer{margin-bottom:70px}
+.summary-wrap{display:none}
+.summary-wrap.active{display:block}
+
 @media screen and (max-width: 600px) {
   /* FAB buttons: stack vertically */
   .fab-print { right: 12px; bottom: 12px; padding: 10px 18px; font-size: 0.82rem; }
@@ -171,6 +191,9 @@ body{font-family:'Inter',sans-serif;background:var(--k-bg);color:var(--k-text);f
   .ssf-thresholds { flex-wrap: wrap; }
   .sec-head { padding: 10px 12px; }
   .sub-row { padding: 7px 10px; }
+  .wizard-nav { padding: 10px 12px; }
+  .wizard-nav button { padding: 10px 20px; font-size: 0.82rem; }
+  .step-dot { width: 28px; height: 28px; font-size: 0.72rem; }
 }
 
 @media screen and (max-width: 480px) {
@@ -192,12 +215,20 @@ body{font-family:'Inter',sans-serif;background:var(--k-bg);color:var(--k-text);f
   .barto-note { font-size: 0.73rem; padding: 6px 10px; }
 }
 
+@media screen and (max-width: 400px) {
+  .step-dots { display: none; }
+}
+
 @media print{
   *{-webkit-print-color-adjust:exact;print-color-adjust:exact}
   body{background:white;font-size:11px}
   .page-header,.instr-banner,.companion-bar{background:var(--k-dark)!important}
   .sec-head{background:var(--k-dark)!important}
   .fab-print,.fab-copy{display:none!important}
+  .wizard-header{display:none!important}
+  .wizard-nav{display:none!important}
+  .wizard-step{display:block!important}
+  .summary-wrap{display:block!important}
   .main-wrap{padding:16px 24px 24px}
   .sec-card{break-inside:avoid;box-shadow:none;margin-bottom:14px}
 }
@@ -215,6 +246,11 @@ body{font-family:'Inter',sans-serif;background:var(--k-bg);color:var(--k-text);f
     <p class="sub">Katka Gazdik, FDN Practitioner &nbsp;·&nbsp; katalystforhealth.com &nbsp;·&nbsp; 206-354-7242</p>
   </div>
 </header>
+
+<div class="wizard-header" id="wizard-header">
+  <div class="step-dots" id="step-dots"></div>
+  <div class="step-label" id="step-label"></div>
+</div>
 
 <div class="companion-bar">
   📋&nbsp; <strong>Important:</strong> This form is designed for complex cases and works alongside your MC Scorecard and Lifestyle &amp; Medical History intake forms. Please complete those first. This form covers areas those forms do not — pathogens, co-infections, mold/CIRS, MCAS, POTS, and heavy metal toxicity.
@@ -254,6 +290,7 @@ body{font-family:'Inter',sans-serif;background:var(--k-bg);color:var(--k-text);f
 
 <div class="main-wrap" id="form-root"></div>
 
+<div class="summary-wrap" id="summary-wrap">
 <div class="main-wrap" style="padding-top:0">
   <div class="summary-card">
     <div class="sec-head"><h3>Score Summary — All Sections</h3><div class="sec-head-badge">Complete the form above first</div></div>
@@ -263,6 +300,7 @@ body{font-family:'Inter',sans-serif;background:var(--k-bg);color:var(--k-text);f
     </table>
   </div>
 </div>
+</div>
 
 <footer class="page-footer">
   <strong>Katalyst Health</strong> &nbsp;·&nbsp; Katka Gazdik, FDN Practitioner, MSc Neuroscience | BSc Cell &amp; Molecular Biology &nbsp;·&nbsp;
@@ -271,10 +309,15 @@ body{font-family:'Inter',sans-serif;background:var(--k-bg);color:var(--k-text);f
   <em>This assessment is for informational and educational purposes only and does not constitute medical advice, diagnosis, or treatment. Higher scores indicate a stronger pattern fit for discussion and possible follow-up — not a diagnosis. Many symptoms overlap across conditions. Results help guide follow-up questions and testing priorities.</em>
 </footer>
 
-<button class="fab-print" onclick="window.print()">🖨&nbsp; Print / Save as PDF</button>
-<button class="fab-copy" onclick="copyScores()">📋&nbsp; Copy Score Summary</button>
+<button class="fab-print" id="fab-print" onclick="window.print()" style="display:none">🖨&nbsp; Print / Save as PDF</button>
+<button class="fab-copy" id="fab-copy" onclick="copyScores()" style="display:none">📋&nbsp; Copy Score Summary</button>
 <div id="copyToast" style="display:none;position:fixed;bottom:80px;right:24px;background:var(--k-dark);color:white;padding:10px 20px;border-radius:8px;font-size:0.85rem;z-index:300">✓ Copied to clipboard!</div>
 <div id="restoreToast" style="display:none;position:fixed;bottom:80px;right:24px;background:var(--k-dark);color:white;padding:10px 20px;border-radius:8px;font-size:0.85rem;z-index:300">↻ Previous answers restored</div>
+
+<div class="wizard-nav" id="wizard-nav">
+  <button class="wiz-back" id="wiz-back" onclick="goToStep(currentStep - 1)">← Back</button>
+  <button class="wiz-next" id="wiz-next" onclick="goToStep(currentStep + 1)">Next →</button>
+</div>
 
 <script>
 const _A=[0,1,2,3],_B=[0,2,4,6],_C=[0,4,6,8],_D=[0,1,2,4],_E=[0,4,8,10],_F=[0,2,4,5],_G=[0,1,3,4],_H=[0,2,3,4],_I=[0,2,6,8],_J=[0,6,8,12],_K=[0,0],_L=[0,1,2,6];
@@ -958,14 +1001,23 @@ document.addEventListener('DOMContentLoaded', function() {
     if (!sumBody) throw new Error('Missing #sum-body element');
 
     let curGroup = '';
+    let stepNum = 0;
+    let stepWrap = null;
+    window.GROUP_NAMES = [];
 
     SECTIONS.forEach((sec) => {
       if (sec.group !== curGroup) {
         curGroup = sec.group;
+        stepNum++;
+        GROUP_NAMES.push(sec.group);
+        stepWrap = document.createElement('div');
+        stepWrap.className = 'wizard-step';
+        stepWrap.dataset.step = stepNum;
+        root.appendChild(stepWrap);
         const gt = document.createElement('div');
         gt.className = 'group-title';
         gt.textContent = sec.group;
-        root.appendChild(gt);
+        stepWrap.appendChild(gt);
       }
 
       const freqQs = sec.questions.filter(q => Array.isArray(q) && q[1]==='f');
@@ -1045,15 +1097,33 @@ document.addEventListener('DOMContentLoaded', function() {
       footer.className = 'sec-score-footer';
       footer.innerHTML = '<div class="ssf-left"><div class="ssf-label">Live Score Total \u2193</div><div class="ssf-number" id="snum_' + sec.id + '">0</div><div style="font-size:0.7rem;color:var(--k-muted);margin-left:4px;align-self:center">pts<br>(updates<br>as you answer)</div></div><div class="ssf-thresholds"><div class="thresh-box t-g" id="tb_g_' + sec.id + '"><div class="t-dot"></div>Green 0\u2013' + sec.g[1] + '</div><div class="thresh-box t-y" id="tb_y_' + sec.id + '"><div class="t-dot"></div>Yellow ' + sec.y[0] + '\u2013' + sec.y[1] + '</div><div class="thresh-box t-r" id="tb_r_' + sec.id + '"><div class="t-dot"></div>Red ' + sec.r[0] + '+</div></div><div class="ssf-status" id="sstat_' + sec.id + '">Not yet answered</div>';
       card.appendChild(footer);
-      root.appendChild(card);
+      stepWrap.appendChild(card);
 
       const tr = document.createElement('tr');
       tr.innerHTML = '<td>' + sec.title + '</td><td class="td-score" id="sum_score_' + sec.id + '">\u2014</td><td id="sum_range_' + sec.id + '"><span class="spill-na">\u2014</span></td><td><span class="spill-g">0\u2013' + sec.g[1] + '</span></td><td><span class="spill-y">' + sec.y[0] + '\u2013' + sec.y[1] + '</span></td><td><span class="spill-r">' + sec.r[0] + '+</span></td>';
       sumBody.appendChild(tr);
     });
 
+    // Build step dots
+    var dotsEl = document.getElementById('step-dots');
+    GROUP_NAMES.forEach(function(name, i) {
+      var dot = document.createElement('div');
+      dot.className = 'step-dot future';
+      dot.textContent = i + 1;
+      dot.dataset.step = i + 1;
+      dot.onclick = function() { if (this.classList.contains('completed')) goToStep(i + 1); };
+      dotsEl.appendChild(dot);
+    });
+    var dot8 = document.createElement('div');
+    dot8.className = 'step-dot future';
+    dot8.textContent = '8';
+    dot8.dataset.step = 8;
+    dot8.onclick = function() { if (this.classList.contains('completed')) goToStep(8); };
+    dotsEl.appendChild(dot8);
+
     console.log('\u2705 Katalyst Assessment loaded:', SECTIONS.length, 'sections');
     restoreState();
+    if (!localStorage.getItem(STORAGE_KEY)) goToStep(1);
 
   } catch(err) {
     console.error('Assessment render failed:', err);
@@ -1110,6 +1180,70 @@ window.copyScores = function() {
   }).catch(()=>alert('Please use the Print/PDF button instead.'));
 };
 
+// ─── WIZARD NAVIGATION ─────────────────────────────────────────────────
+var currentStep = 1;
+var TOTAL_STEPS = 8;
+
+window.goToStep = function(n) {
+  if (n < 1 || n > TOTAL_STEPS) return;
+  currentStep = n;
+
+  document.querySelectorAll('.wizard-step').forEach(function(el) {
+    el.classList.remove('active');
+  });
+
+  document.querySelectorAll('.step-dot').forEach(function(dot) {
+    var s = parseInt(dot.dataset.step);
+    if (s < n) {
+      dot.className = 'step-dot completed';
+      dot.textContent = '\u2713';
+    } else if (s === n) {
+      dot.className = 'step-dot current';
+      dot.textContent = s;
+    } else {
+      dot.className = 'step-dot future';
+      dot.textContent = s;
+    }
+  });
+
+  var wizHeader = document.getElementById('wizard-header');
+  var summaryWrap = document.getElementById('summary-wrap');
+  var fabPrint = document.getElementById('fab-print');
+  var fabCopy = document.getElementById('fab-copy');
+  var backBtn = document.getElementById('wiz-back');
+  var nextBtn = document.getElementById('wiz-next');
+  var stepLabel = document.getElementById('step-label');
+
+  if (n === 8) {
+    document.querySelectorAll('.wizard-step').forEach(function(el) {
+      el.classList.add('active');
+    });
+    summaryWrap.classList.add('active');
+    fabPrint.style.display = '';
+    fabCopy.style.display = '';
+    wizHeader.querySelector('.step-dots').style.display = 'none';
+    stepLabel.textContent = 'Review & Print \u2014 All Sections';
+    backBtn.textContent = '\u2190 Back to Form';
+    backBtn.style.display = '';
+    nextBtn.style.display = 'none';
+  } else {
+    var activeStep = document.querySelector('.wizard-step[data-step="' + n + '"]');
+    if (activeStep) activeStep.classList.add('active');
+    summaryWrap.classList.remove('active');
+    fabPrint.style.display = 'none';
+    fabCopy.style.display = 'none';
+    wizHeader.querySelector('.step-dots').style.display = '';
+    stepLabel.textContent = 'Step ' + n + ' of ' + TOTAL_STEPS + ' \u00b7 ' + (GROUP_NAMES[n - 1] || '');
+    backBtn.textContent = '\u2190 Back';
+    backBtn.style.display = (n === 1) ? 'none' : '';
+    nextBtn.style.display = '';
+    nextBtn.textContent = (n === 7) ? 'Review & Print \u2192' : 'Next \u2192';
+  }
+
+  window.scrollTo(0, 0);
+  saveState();
+};
+
 // ─── LOCAL STORAGE PERSISTENCE ─────────────────────────────────────────
 var STORAGE_KEY = 'kh_assessment_state';
 
@@ -1130,6 +1264,7 @@ function saveState() {
     radios: radios,
     checkboxes: checkboxes,
     textInputs: textInputs,
+    currentStep: currentStep,
     savedAt: new Date().toISOString()
   }));
 }
@@ -1159,6 +1294,12 @@ function restoreState() {
   }
 
   SECTIONS.forEach(function(sec) { recalc(sec.id); });
+
+  if (state.currentStep) {
+    goToStep(state.currentStep);
+  } else {
+    goToStep(1);
+  }
 
   var toast = document.getElementById('restoreToast');
   if (toast) { toast.style.display = 'block'; setTimeout(function() { toast.style.display = 'none'; }, 3000); }
