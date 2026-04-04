@@ -23,12 +23,22 @@ body{font-family:'Inter',sans-serif;background:var(--k-bg);color:var(--k-text);f
 .header-right h1{font-family:'Source Serif 4',serif;font-size:1.75rem;font-weight:700;letter-spacing:-0.01em;line-height:1.1}
 .header-right .sub{font-size:0.78rem;font-weight:300;opacity:0.8;margin-top:5px;letter-spacing:0.06em;text-transform:uppercase}
 
-.companion-bar{background:#1a3a2e;color:rgba(255,255,255,0.88);padding:11px 44px;font-size:0.82rem;display:flex;align-items:center;gap:10px}
-.companion-bar strong{color:#a8e6c8}
-
-.instr-banner{background:var(--k-dark);color:white;padding:14px 44px;display:flex;align-items:flex-start;gap:14px}
-.instr-banner p{font-size:0.84rem;line-height:1.7;opacity:0.93}
-.instr-banner strong{color:#a8e6c8}
+.notice-area{padding:16px 44px 8px;background:var(--k-bg);display:flex;flex-direction:column;gap:10px}
+.notice-card{border-radius:10px;padding:14px 18px;font-size:0.84rem;line-height:1.65;font-family:'Inter',sans-serif}
+.notice-card-header{display:flex;align-items:center;gap:8px;font-weight:600;margin-bottom:6px;font-size:0.88rem}
+.notice-card ul{margin:4px 0 0 18px;padding:0}
+.notice-card li{margin-bottom:3px}
+.notice-important{background:#fff3cd;border:1px solid #f0d080;color:#5a4a00}
+.notice-important .notice-card-header{color:#7a5800}
+.notice-instructions{background:var(--k-dark);color:rgba(255,255,255,0.93);border:1px solid var(--k-soft)}
+.notice-instructions strong{color:#a8e6c8}
+.notice-instructions .notice-card-header{color:white}
+.notice-disclaimer{background:#f0f7f3;border:1px solid var(--k-rule);color:var(--k-text)}
+.notice-disclaimer .notice-card-header{color:var(--score-y)}
+.notice-toggle{background:none;border:none;color:var(--k-muted);font-size:0.78rem;font-family:'Inter',sans-serif;cursor:pointer;padding:2px 0;text-decoration:underline;display:inline}
+.notice-collapsed .notice-card{display:none}
+.notice-collapsed .notice-summary{display:flex}
+.notice-summary{display:none;align-items:center;gap:8px;padding:8px 0;font-size:0.82rem;color:var(--k-muted);font-family:'Inter',sans-serif}
 
 .scale-legend{display:flex;align-items:center;gap:0;background:white;border-bottom:1px solid var(--k-rule);padding:0 44px}
 .scale-legend .sl-label{font-size:0.72rem;font-weight:600;text-transform:uppercase;letter-spacing:0.06em;color:var(--k-muted);padding:9px 16px 9px 0;white-space:nowrap}
@@ -172,8 +182,7 @@ body{font-family:'Inter',sans-serif;background:var(--k-bg);color:var(--k-text);f
   #copyToast { bottom: 120px !important; right: 12px !important; }
   /* Client bar, scale legend, padding */
   .page-header { padding: 16px 20px 14px; }
-  .companion-bar { padding: 10px 20px; }
-  .instr-banner { padding: 12px 20px; }
+  .notice-area { padding: 12px 12px 6px; }
   .main-wrap { padding: 16px 12px 32px; }
   .client-bar { flex-wrap: wrap; gap: 12px; padding: 12px 20px; }
   .field input { min-width: 120px; }
@@ -222,7 +231,8 @@ body{font-family:'Inter',sans-serif;background:var(--k-bg);color:var(--k-text);f
 @media print{
   *{-webkit-print-color-adjust:exact;print-color-adjust:exact}
   body{background:white;font-size:11px}
-  .page-header,.instr-banner,.companion-bar{background:var(--k-dark)!important}
+  .page-header{background:var(--k-dark)!important}
+  .notice-area{display:none!important}
   .sec-head{background:var(--k-dark)!important}
   .fab-print,.fab-copy{display:none!important}
   .wizard-header{display:none!important}
@@ -252,20 +262,32 @@ body{font-family:'Inter',sans-serif;background:var(--k-bg);color:var(--k-text);f
   <div class="step-label" id="step-label"></div>
 </div>
 
-<div class="companion-bar">
-  📋&nbsp; <strong>Important:</strong> This form is designed for complex cases and works alongside your MC Scorecard and Lifestyle &amp; Medical History intake forms. Please complete those first. This form covers areas those forms do not — pathogens, co-infections, mold/CIRS, MCAS, POTS, and heavy metal toxicity.
-</div>
-
-<div class="instr-banner">
-  <div style="font-size:1.2rem;margin-top:1px;flex-shrink:0">📋</div>
-  <p>
-    Rate each symptom based on how often you experienced it over the <strong>last 90 days.</strong>
-    For Yes/No questions, select what applies. Scores update automatically — <strong>Yellow or Red</strong> flags an area for your consultation.
-    <strong>★ Hallmark items count double</strong> — they are the most clinically significant for that condition.
-    When finished, click <strong>📋 Copy Score Summary</strong> and paste into an email to katka@katalysthealth.us, or click <strong>🖨 Print / Save as PDF</strong> and attach the file.
-    <br><br>
-    <strong>Please note:</strong> Higher scores indicate a stronger pattern fit for discussion and possible follow-up — not a diagnosis. Many symptoms overlap across conditions. This form helps guide follow-up questions and testing priorities.
-  </p>
+<div class="notice-area" id="notice-area">
+  <div class="notice-summary" id="notice-summary">
+    Rate symptoms for the <strong>last 90 days</strong>. Scores update automatically. &nbsp;
+    <button class="notice-toggle" onclick="toggleNotice()">Show instructions</button>
+  </div>
+  <div class="notice-card notice-important">
+    <div class="notice-card-header">&#9888;&#65039; Complete Other Forms First</div>
+    This form is designed for complex cases and works alongside your MC Scorecard and Lifestyle &amp; Medical History intake forms. Please complete those first. This form covers areas those forms do not &mdash; pathogens, co-infections, mold/CIRS, MCAS, POTS, and heavy metal toxicity.
+  </div>
+  <div class="notice-card notice-instructions">
+    <div class="notice-card-header">&#128203; How to Fill Out This Form</div>
+    <ul>
+      <li>Rate each symptom based on how often you experienced it over the <strong>last 90 days</strong></li>
+      <li>For Yes/No questions, select what applies</li>
+      <li>Scores update automatically &mdash; <strong>Yellow or Red</strong> flags an area for your consultation</li>
+      <li><strong>&#9733; Hallmark items count double</strong> &mdash; they are the most clinically significant for that condition</li>
+      <li>When finished, click <strong>Copy Score Summary</strong> and email to katka@katalysthealth.us, or click <strong>Print / Save as PDF</strong></li>
+    </ul>
+  </div>
+  <div class="notice-card notice-disclaimer">
+    <div class="notice-card-header">&#9888; Important Disclaimer</div>
+    Higher scores indicate a stronger pattern fit for discussion and possible follow-up &mdash; <strong>not a diagnosis</strong>. Many symptoms overlap across conditions. This form helps guide follow-up questions and testing priorities.
+  </div>
+  <div class="notice-card" style="background:none;border:none;text-align:right;padding:2px 0 4px">
+    <button class="notice-toggle" onclick="toggleNotice()">Hide instructions</button>
+  </div>
 </div>
 
 <div class="scale-legend">
@@ -1180,6 +1202,12 @@ window.copyScores = function() {
   }).catch(()=>alert('Please use the Print/PDF button instead.'));
 };
 
+// ─── NOTICE TOGGLE ─────────────────────────────────────────────────────
+window.toggleNotice = function() {
+  var area = document.getElementById('notice-area');
+  area.classList.toggle('notice-collapsed');
+};
+
 // ─── WIZARD NAVIGATION ─────────────────────────────────────────────────
 var currentStep = 1;
 var TOTAL_STEPS = 8;
@@ -1238,6 +1266,14 @@ window.goToStep = function(n) {
     backBtn.style.display = (n === 1) ? 'none' : '';
     nextBtn.style.display = '';
     nextBtn.textContent = (n === 7) ? 'Review & Print \u2192' : 'Next \u2192';
+  }
+
+  // Auto-collapse instructions on steps 2+, expand on step 1
+  var noticeArea = document.getElementById('notice-area');
+  if (n === 1) {
+    noticeArea.classList.remove('notice-collapsed');
+  } else {
+    noticeArea.classList.add('notice-collapsed');
   }
 
   window.scrollTo(0, 0);
