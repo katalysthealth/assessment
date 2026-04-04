@@ -149,7 +149,7 @@ body{font-family:'Inter',sans-serif;background:var(--k-bg);color:var(--k-text);f
 .page-footer a{color:#a8e6c8;text-decoration:none}
 .page-footer strong{color:white}
 
-.fab-bar{position:fixed;bottom:70px;right:24px;display:flex;gap:10px;z-index:200;flex-wrap:wrap;justify-content:flex-end}
+.action-bar{display:flex;gap:10px;flex-wrap:wrap;justify-content:center;padding:20px 20px 24px;border-top:1px solid var(--k-rule)}
 .fab-btn{background:var(--k-mid);color:white;border:none;border-radius:50px;padding:12px 22px;font-family:'Inter',sans-serif;font-size:0.84rem;font-weight:600;cursor:pointer;box-shadow:0 4px 18px rgba(27,77,62,0.3);letter-spacing:0.02em;transition:all 0.2s;white-space:nowrap}
 .fab-btn:hover{background:var(--k-dark);transform:translateY(-2px)}
 .fab-email{background:#2563eb}
@@ -185,11 +185,10 @@ body{font-family:'Inter',sans-serif;background:var(--k-bg);color:var(--k-text);f
 .summary-wrap.active{display:block}
 
 @media screen and (max-width: 600px) {
-  /* FAB bar: wrap on mobile */
-  .fab-bar { right: 12px; bottom: 62px; left: 12px; justify-content: center; }
+  /* Action bar: compact on mobile */
+  .action-bar { padding: 14px 12px 18px; gap: 8px; }
   .fab-btn { padding: 10px 14px; font-size: 0.78rem; }
-  .page-footer { padding-bottom: 160px; }
-  #copyToast { bottom: 160px !important; right: 12px !important; }
+  .page-footer { padding-bottom: 80px; }
   /* Client bar, scale legend, padding */
   .page-header { padding: 16px 20px 14px; }
   .notice-area { padding: 12px 12px 6px; }
@@ -244,7 +243,7 @@ body{font-family:'Inter',sans-serif;background:var(--k-bg);color:var(--k-text);f
   .page-header{background:var(--k-dark)!important}
   .notice-area{display:none!important}
   .sec-head{background:var(--k-dark)!important}
-  .fab-bar{display:none!important}
+  .action-bar{display:none!important}
   .wizard-header,.step-progress{display:none!important}
   .wizard-nav{display:none!important}
   .wizard-step{display:block!important}
@@ -338,6 +337,12 @@ body{font-family:'Inter',sans-serif;background:var(--k-bg);color:var(--k-text);f
       <thead><tr><th style="width:36%">Section</th><th style="width:10%">Score</th><th style="width:14%">Range</th><th>🟢 Green</th><th>🟡 Yellow</th><th>🔴 Red</th></tr></thead>
       <tbody id="sum-body"></tbody>
     </table>
+    <div class="action-bar" id="action-bar">
+      <button class="fab-btn fab-email" onclick="emailResults()">&#9993;&nbsp; Email Results</button>
+      <button class="fab-btn fab-save" onclick="saveToFile()">&#128190;&nbsp; Save to File</button>
+      <button class="fab-btn fab-copy" id="fab-copy" onclick="copyScores()">&#128203;&nbsp; Copy Summary</button>
+      <button class="fab-btn fab-print" id="fab-print" onclick="window.print()">&#128424;&nbsp; Print / PDF</button>
+    </div>
   </div>
 </div>
 </div>
@@ -349,12 +354,6 @@ body{font-family:'Inter',sans-serif;background:var(--k-bg);color:var(--k-text);f
   <em>This assessment is for informational and educational purposes only and does not constitute medical advice, diagnosis, or treatment. Higher scores indicate a stronger pattern fit for discussion and possible follow-up — not a diagnosis. Many symptoms overlap across conditions. Results help guide follow-up questions and testing priorities.</em>
 </footer>
 
-<div class="fab-bar" id="fab-bar" style="display:none">
-  <button class="fab-btn fab-email" onclick="emailResults()">✉&nbsp; Email Results</button>
-  <button class="fab-btn fab-save" onclick="saveToFile()">💾&nbsp; Save to File</button>
-  <button class="fab-btn fab-copy" id="fab-copy" onclick="copyScores()">📋&nbsp; Copy Summary</button>
-  <button class="fab-btn fab-print" id="fab-print" onclick="window.print()">🖨&nbsp; Print / PDF</button>
-</div>
 <div id="copyToast" style="display:none;position:fixed;bottom:80px;right:24px;background:var(--k-dark);color:white;padding:10px 20px;border-radius:8px;font-size:0.85rem;z-index:300">✓ Copied to clipboard!</div>
 <div id="restoreToast" style="display:none;position:fixed;bottom:80px;right:24px;background:var(--k-dark);color:white;padding:10px 20px;border-radius:8px;font-size:0.85rem;z-index:300">↻ Previous answers restored</div>
 
@@ -1357,7 +1356,6 @@ window.goToStep = function(n) {
 
   var wizHeader = document.getElementById('wizard-header');
   var summaryWrap = document.getElementById('summary-wrap');
-  var fabBar = document.getElementById('fab-bar');
   var backBtn = document.getElementById('wiz-back');
   var nextBtn = document.getElementById('wiz-next');
   var stepLabel = document.getElementById('step-label');
@@ -1367,7 +1365,6 @@ window.goToStep = function(n) {
       el.classList.add('active');
     });
     summaryWrap.classList.add('active');
-    fabBar.style.display = '';
     wizHeader.querySelector('.step-dots').style.display = 'none';
     stepLabel.textContent = 'Review & Print \u2014 All Sections';
     backBtn.textContent = '\u2190 Back to Form';
@@ -1377,7 +1374,6 @@ window.goToStep = function(n) {
     var activeStep = document.querySelector('.wizard-step[data-step="' + n + '"]');
     if (activeStep) activeStep.classList.add('active');
     summaryWrap.classList.remove('active');
-    fabBar.style.display = 'none';
     wizHeader.querySelector('.step-dots').style.display = '';
     stepLabel.textContent = 'Step ' + n + ' of ' + TOTAL_STEPS + ' \u00b7 ' + (GROUP_NAMES[n - 1] || '');
     backBtn.textContent = '\u2190 Back';
@@ -1524,7 +1520,13 @@ window.emailResults = function() {
     }
     lines.push(sec.title + ': ' + score + ' pts - ' + RL[rk]);
   });
-  lines.push('', '---', 'Please find the saved assessment file attached.', '', 'Katalyst Health | katalystforhealth.com');
+  var fileName = (name.replace(/[^a-zA-Z0-9 ]/g, '').trim().replace(/\s+/g, '_') || 'Assessment');
+  var now = new Date();
+  var ts = now.getFullYear() + '-' + String(now.getMonth()+1).padStart(2,'0') + '-' + String(now.getDate()).padStart(2,'0')
+    + '_' + String(now.getHours()).padStart(2,'0') + '-' + String(now.getMinutes()).padStart(2,'0');
+  fileName = fileName + '_' + ts + '.json';
+
+  lines.push('', '---', 'IMPORTANT: Please attach the saved assessment file (' + fileName + ') that was just downloaded to your computer.', 'The attached file contains all individual answers for review.', '', 'Katalyst Health | katalystforhealth.com');
 
   var subject = 'Assessment Results - ' + name;
   var body = lines.join('\n');
