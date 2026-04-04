@@ -164,6 +164,10 @@ body{font-family:'Inter',sans-serif;background:var(--k-bg);color:var(--k-text);f
 .step-label{font-size:0.82rem;color:var(--k-muted);font-family:'Inter',sans-serif}
 .wizard-step{display:none}
 .wizard-step.active{display:block}
+.step-progress{max-width:340px;margin:10px auto 0;display:flex;align-items:center;gap:10px}
+.step-progress-bar{flex:1;height:6px;background:#e0e0e0;border-radius:99px;overflow:hidden}
+.step-progress-fill{height:100%;background:var(--k-mid);border-radius:99px;transition:width 0.3s ease}
+.step-progress-text{font-size:0.72rem;color:var(--k-muted);font-family:'Inter',sans-serif;white-space:nowrap}
 .wizard-nav{position:fixed;bottom:0;left:0;right:0;background:white;border-top:2px solid var(--k-rule);padding:12px 24px;display:flex;justify-content:space-between;align-items:center;z-index:150;font-family:'Inter',sans-serif}
 .wizard-nav button{padding:12px 28px;border-radius:8px;font-size:0.9rem;font-weight:600;cursor:pointer;transition:all 0.2s}
 .wiz-back{background:white;border:1px solid #ccc;color:var(--k-dark)}
@@ -235,7 +239,7 @@ body{font-family:'Inter',sans-serif;background:var(--k-bg);color:var(--k-text);f
   .notice-area{display:none!important}
   .sec-head{background:var(--k-dark)!important}
   .fab-print,.fab-copy{display:none!important}
-  .wizard-header{display:none!important}
+  .wizard-header,.step-progress{display:none!important}
   .wizard-nav{display:none!important}
   .wizard-step{display:block!important}
   .summary-wrap{display:block!important}
@@ -260,6 +264,10 @@ body{font-family:'Inter',sans-serif;background:var(--k-bg);color:var(--k-text);f
 <div class="wizard-header" id="wizard-header">
   <div class="step-dots" id="step-dots"></div>
   <div class="step-label" id="step-label"></div>
+  <div class="step-progress" id="step-progress">
+    <div class="step-progress-bar"><div class="step-progress-fill" id="step-progress-fill"></div></div>
+    <div class="step-progress-text" id="step-progress-text"></div>
+  </div>
 </div>
 
 <div class="notice-area" id="notice-area">
@@ -1179,6 +1187,7 @@ window.recalc = function(sid) {
   statEl.className='ssf-status s-'+range; statEl.textContent=msgs[range];
   badgeEl.textContent='Score: '+total+'  |  '+label;
   sumRng.innerHTML='<span class="spill-'+range+'">'+label+'</span>';
+  updateProgress();
 };
 
 window.copyScores = function() {
@@ -1206,6 +1215,24 @@ window.copyScores = function() {
 window.toggleNotice = function() {
   var area = document.getElementById('notice-area');
   area.classList.toggle('notice-collapsed');
+};
+
+// ─── STEP PROGRESS ─────────────────────────────────────────────────────
+window.updateProgress = function() {
+  var step = document.querySelector('.wizard-step[data-step="' + currentStep + '"]');
+  var progressEl = document.getElementById('step-progress');
+  if (!step || currentStep === 8) { progressEl.style.display = 'none'; return; }
+  progressEl.style.display = '';
+  var names = new Set();
+  step.querySelectorAll('input[type="radio"]').forEach(function(r) { names.add(r.name); });
+  var total = names.size;
+  var answered = 0;
+  names.forEach(function(name) {
+    if (step.querySelector('input[name="' + name + '"]:checked')) answered++;
+  });
+  var pct = total > 0 ? Math.round((answered / total) * 100) : 0;
+  document.getElementById('step-progress-fill').style.width = pct + '%';
+  document.getElementById('step-progress-text').textContent = answered + ' / ' + total;
 };
 
 // ─── WIZARD NAVIGATION ─────────────────────────────────────────────────
@@ -1277,6 +1304,7 @@ window.goToStep = function(n) {
   }
 
   window.scrollTo(0, 0);
+  updateProgress();
   saveState();
 };
 
