@@ -149,10 +149,13 @@ body{font-family:'Inter',sans-serif;background:var(--k-bg);color:var(--k-text);f
 .page-footer a{color:#a8e6c8;text-decoration:none}
 .page-footer strong{color:white}
 
-.fab-print{position:fixed;bottom:24px;right:24px;background:var(--k-mid);color:white;border:none;border-radius:50px;padding:13px 26px;font-family:'Inter',sans-serif;font-size:0.88rem;font-weight:600;cursor:pointer;box-shadow:0 4px 18px rgba(27,77,62,0.3);z-index:200;letter-spacing:0.02em;transition:all 0.2s}
-.fab-print:hover{background:var(--k-dark);transform:translateY(-2px)}
-.fab-copy{position:fixed;bottom:24px;right:220px;background:var(--k-dark);color:white;border:none;border-radius:50px;padding:13px 22px;font-family:'Inter',sans-serif;font-size:0.88rem;font-weight:600;cursor:pointer;box-shadow:0 4px 18px rgba(27,77,62,0.3);z-index:200;letter-spacing:0.02em;transition:all 0.2s}
-.fab-copy:hover{background:var(--k-mid);transform:translateY(-2px)}
+.fab-bar{position:fixed;bottom:70px;right:24px;display:flex;gap:10px;z-index:200;flex-wrap:wrap;justify-content:flex-end}
+.fab-btn{background:var(--k-mid);color:white;border:none;border-radius:50px;padding:12px 22px;font-family:'Inter',sans-serif;font-size:0.84rem;font-weight:600;cursor:pointer;box-shadow:0 4px 18px rgba(27,77,62,0.3);letter-spacing:0.02em;transition:all 0.2s;white-space:nowrap}
+.fab-btn:hover{background:var(--k-dark);transform:translateY(-2px)}
+.fab-email{background:#2563eb}
+.fab-email:hover{background:#1d4ed8}
+.fab-save{background:var(--k-dark)}
+.fab-save:hover{background:var(--k-mid)}
 
 .wizard-header{text-align:center;padding:16px 20px 8px;background:white;border-bottom:1px solid var(--k-rule);position:sticky;top:0;z-index:100;box-shadow:0 2px 8px rgba(0,0,0,0.06)}
 .step-dots{display:flex;justify-content:center;gap:8px;margin-bottom:6px}
@@ -182,11 +185,11 @@ body{font-family:'Inter',sans-serif;background:var(--k-bg);color:var(--k-text);f
 .summary-wrap.active{display:block}
 
 @media screen and (max-width: 600px) {
-  /* FAB buttons: stack vertically */
-  .fab-print { right: 12px; bottom: 12px; padding: 10px 18px; font-size: 0.82rem; }
-  .fab-copy { right: 12px; bottom: 60px; padding: 10px 18px; font-size: 0.82rem; }
-  .page-footer { padding-bottom: 120px; }
-  #copyToast { bottom: 120px !important; right: 12px !important; }
+  /* FAB bar: wrap on mobile */
+  .fab-bar { right: 12px; bottom: 62px; left: 12px; justify-content: center; }
+  .fab-btn { padding: 10px 14px; font-size: 0.78rem; }
+  .page-footer { padding-bottom: 160px; }
+  #copyToast { bottom: 160px !important; right: 12px !important; }
   /* Client bar, scale legend, padding */
   .page-header { padding: 16px 20px 14px; }
   .notice-area { padding: 12px 12px 6px; }
@@ -241,7 +244,7 @@ body{font-family:'Inter',sans-serif;background:var(--k-bg);color:var(--k-text);f
   .page-header{background:var(--k-dark)!important}
   .notice-area{display:none!important}
   .sec-head{background:var(--k-dark)!important}
-  .fab-print,.fab-copy{display:none!important}
+  .fab-bar{display:none!important}
   .wizard-header,.step-progress{display:none!important}
   .wizard-nav{display:none!important}
   .wizard-step{display:block!important}
@@ -318,7 +321,11 @@ body{font-family:'Inter',sans-serif;background:var(--k-bg);color:var(--k-text);f
   <div class="field"><label>Client Name</label><input type="text" placeholder="Full name"></div>
   <div class="field"><label>Date of Birth</label><input type="text" placeholder="MM / DD / YYYY" style="min-width:130px"></div>
   <div class="field"><label>Date Completed</label><input type="text" placeholder="MM / DD / YYYY" style="min-width:130px"></div>
-  <a href="#" onclick="clearForm();return false" style="font-size:0.78rem;color:var(--k-muted);text-decoration:underline;white-space:nowrap;margin-left:auto">Clear Form</a>
+  <div style="margin-left:auto;display:flex;gap:14px;align-items:center">
+    <a href="#" onclick="document.getElementById('load-file').click();return false" style="font-size:0.78rem;color:var(--k-mid);text-decoration:underline;white-space:nowrap">Load File</a>
+    <a href="#" onclick="clearForm();return false" style="font-size:0.78rem;color:var(--k-muted);text-decoration:underline;white-space:nowrap">Clear Form</a>
+  </div>
+  <input type="file" id="load-file" accept=".json" style="display:none" onchange="loadFromFile(this)">
 </div>
 
 <div class="main-wrap" id="form-root"></div>
@@ -342,8 +349,12 @@ body{font-family:'Inter',sans-serif;background:var(--k-bg);color:var(--k-text);f
   <em>This assessment is for informational and educational purposes only and does not constitute medical advice, diagnosis, or treatment. Higher scores indicate a stronger pattern fit for discussion and possible follow-up — not a diagnosis. Many symptoms overlap across conditions. Results help guide follow-up questions and testing priorities.</em>
 </footer>
 
-<button class="fab-print" id="fab-print" onclick="window.print()" style="display:none">🖨&nbsp; Print / Save as PDF</button>
-<button class="fab-copy" id="fab-copy" onclick="copyScores()" style="display:none">📋&nbsp; Copy Score Summary</button>
+<div class="fab-bar" id="fab-bar" style="display:none">
+  <button class="fab-btn fab-email" onclick="emailResults()">✉&nbsp; Email Results</button>
+  <button class="fab-btn fab-save" onclick="saveToFile()">💾&nbsp; Save to File</button>
+  <button class="fab-btn fab-copy" id="fab-copy" onclick="copyScores()">📋&nbsp; Copy Summary</button>
+  <button class="fab-btn fab-print" id="fab-print" onclick="window.print()">🖨&nbsp; Print / PDF</button>
+</div>
 <div id="copyToast" style="display:none;position:fixed;bottom:80px;right:24px;background:var(--k-dark);color:white;padding:10px 20px;border-radius:8px;font-size:0.85rem;z-index:300">✓ Copied to clipboard!</div>
 <div id="restoreToast" style="display:none;position:fixed;bottom:80px;right:24px;background:var(--k-dark);color:white;padding:10px 20px;border-radius:8px;font-size:0.85rem;z-index:300">↻ Previous answers restored</div>
 
@@ -1346,8 +1357,7 @@ window.goToStep = function(n) {
 
   var wizHeader = document.getElementById('wizard-header');
   var summaryWrap = document.getElementById('summary-wrap');
-  var fabPrint = document.getElementById('fab-print');
-  var fabCopy = document.getElementById('fab-copy');
+  var fabBar = document.getElementById('fab-bar');
   var backBtn = document.getElementById('wiz-back');
   var nextBtn = document.getElementById('wiz-next');
   var stepLabel = document.getElementById('step-label');
@@ -1357,8 +1367,7 @@ window.goToStep = function(n) {
       el.classList.add('active');
     });
     summaryWrap.classList.add('active');
-    fabPrint.style.display = '';
-    fabCopy.style.display = '';
+    fabBar.style.display = '';
     wizHeader.querySelector('.step-dots').style.display = 'none';
     stepLabel.textContent = 'Review & Print \u2014 All Sections';
     backBtn.textContent = '\u2190 Back to Form';
@@ -1368,8 +1377,7 @@ window.goToStep = function(n) {
     var activeStep = document.querySelector('.wizard-step[data-step="' + n + '"]');
     if (activeStep) activeStep.classList.add('active');
     summaryWrap.classList.remove('active');
-    fabPrint.style.display = 'none';
-    fabCopy.style.display = 'none';
+    fabBar.style.display = 'none';
     wizHeader.querySelector('.step-dots').style.display = '';
     stepLabel.textContent = 'Step ' + n + ' of ' + TOTAL_STEPS + ' \u00b7 ' + (GROUP_NAMES[n - 1] || '');
     backBtn.textContent = '\u2190 Back';
@@ -1456,6 +1464,72 @@ function restoreState() {
 window.clearForm = function() {
   localStorage.removeItem(STORAGE_KEY);
   location.reload();
+};
+
+window.saveToFile = function() {
+  saveState();
+  var data = localStorage.getItem(STORAGE_KEY);
+  if (!data) { alert('No form data to save.'); return; }
+  var name = (document.querySelector('input[placeholder="Full name"]') || {}).value || 'Assessment';
+  name = name.replace(/[^a-zA-Z0-9 ]/g, '').trim().replace(/\s+/g, '_') || 'Assessment';
+  var now = new Date();
+  var ts = now.getFullYear() + '-' + String(now.getMonth()+1).padStart(2,'0') + '-' + String(now.getDate()).padStart(2,'0')
+    + '_' + String(now.getHours()).padStart(2,'0') + '-' + String(now.getMinutes()).padStart(2,'0');
+  var blob = new Blob([data], { type: 'application/json' });
+  var a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = name + '_' + ts + '.json';
+  a.click();
+  URL.revokeObjectURL(a.href);
+};
+
+window.loadFromFile = function(input) {
+  var file = input.files[0];
+  if (!file) return;
+  var reader = new FileReader();
+  reader.onload = function(e) {
+    var text = e.target.result;
+    try {
+      var state = JSON.parse(text);
+      if (!state.radios && !state.textInputs) { alert('Invalid assessment file.'); return; }
+      localStorage.setItem(STORAGE_KEY, text);
+      location.reload();
+    } catch(err) {
+      alert('Could not read file. Please select a valid assessment JSON file.');
+    }
+  };
+  reader.readAsText(file);
+  input.value = '';
+};
+
+window.emailResults = function() {
+  // First save the file so user has it in downloads
+  saveToFile();
+
+  // Build score summary for email body
+  var name = (document.querySelector('input[placeholder="Full name"]') || {}).value || '(not entered)';
+  var dateFields = document.querySelectorAll('input[placeholder="MM / DD / YYYY"]');
+  var date = (dateFields[1] || {}).value || '(not entered)';
+  var RL = { g: 'Green', y: 'Yellow', r: 'Red', '?': 'Not completed' };
+  var lines = ['KATALYST HEALTH - ADVANCED CLINICAL ASSESSMENT', 'Client: ' + name + '    Date: ' + date, ''];
+  var lg = '';
+  SECTIONS.forEach(function(sec) {
+    if (sec.group !== lg) { lg = sec.group; lines.push('\n-- ' + sec.group.toUpperCase() + ' --'); }
+    var s = document.getElementById('snum_' + sec.id);
+    var score = s ? s.textContent : '0';
+    var n = parseInt(score) || 0;
+    var rk = '?';
+    if (document.querySelector('input[name^="' + sec.id + '_"]:checked')) {
+      rk = n <= sec.g[1] ? 'g' : n <= sec.y[1] ? 'y' : 'r';
+    }
+    lines.push(sec.title + ': ' + score + ' pts - ' + RL[rk]);
+  });
+  lines.push('', '---', 'Please find the saved assessment file attached.', '', 'Katalyst Health | katalystforhealth.com');
+
+  var subject = 'Assessment Results - ' + name;
+  var body = lines.join('\n');
+  var mailto = 'mailto:contact@katalysthealth.us?subject=' + encodeURIComponent(subject) + '&body=' + encodeURIComponent(body);
+  window.open(mailto, '_blank');
 };
 
 document.getElementById('form-root').addEventListener('change', saveState);
