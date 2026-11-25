@@ -37,6 +37,9 @@ body{font-family:'Inter',sans-serif;background:var(--k-bg);color:var(--k-text);f
 .notice-disclaimer .notice-card-header{color:var(--score-y)}
 .notice-toggle{background:none;border:none;color:var(--k-muted);font-size:0.78rem;font-family:'Inter',sans-serif;cursor:pointer;padding:2px 0;text-decoration:underline;display:inline}
 .notice-collapsed .notice-card{display:none}
+.notice-emergency{background:#fdecea;border:1px solid #f3b7b1;border-left:5px solid #c0392b;color:#7d241c}
+.notice-emergency b{color:#a52c22}
+.notice-collapsed .notice-card.notice-emergency{display:block}
 .notice-collapsed .notice-summary{display:flex}
 .notice-summary{display:none;align-items:center;gap:8px;padding:8px 0;font-size:0.82rem;color:var(--k-muted);font-family:'Inter',sans-serif}
 
@@ -280,6 +283,11 @@ body{font-family:'Inter',sans-serif;background:var(--k-bg);color:var(--k-text);f
     Rate symptoms for the <strong>last 90 days</strong>. Scores update automatically. &nbsp;
     <button class="notice-toggle" onclick="toggleNotice()">Show instructions</button>
   </div>
+  <div class="notice-card notice-emergency">
+    <b>This form is not monitored and is not for emergencies.</b> Seek immediate care (call 911 or go to an emergency room)
+    for new or severe chest pain, difficulty breathing, fainting, stroke symptoms (face drooping, arm weakness, speech trouble,
+    sudden vision or balance changes), black or bloody stools, a severe allergic reaction, or any rapidly worsening symptom.
+  </div>
   <div class="notice-card notice-important">
     <div class="notice-card-header">&#9888;&#65039; Complete Other Forms First</div>
     This form is designed for complex cases and works alongside your MC Scorecard and Lifestyle &amp; Medical History intake forms. Please complete those first. This form covers areas those forms do not &mdash; pathogens, co-infections, mold/CIRS, MCAS, POTS, spike protein / long COVID, and heavy metal toxicity.
@@ -290,7 +298,7 @@ body{font-family:'Inter',sans-serif;background:var(--k-bg);color:var(--k-text);f
       <li>Rate each symptom based on how often you experienced it over the <strong>last 90 days</strong></li>
       <li>For Yes/No questions, select what applies</li>
       <li>Scores update automatically &mdash; <strong>Yellow or Red</strong> flags an area for your consultation</li>
-      <li><strong>&#9733; Hallmark items count double</strong> &mdash; they are the most clinically significant for that condition</li>
+      <li><strong>&#9733; Hallmark items count double</strong></li>
       <li>When finished, go to <strong>Step 8 &mdash; Review &amp; Print</strong> to see all your scores</li>
       <li>Click <strong>Email Results</strong> to send your scores and full answers file directly to your practitioner, or use <strong>Save to File</strong> to keep a copy on your device</li>
       <li>You can also <strong>Copy Summary</strong> to clipboard or <strong>Print / Save as PDF</strong></li>
@@ -1246,15 +1254,26 @@ document.addEventListener('DOMContentLoaded', function() {
   }
 });
 
+// Colour only once every question is answered; "(women only)" questions are optional.
+window.sectionStatus = function(sec) {
+  let total = 0, answered = 0, required = 0, requiredAnswered = 0;
+  sec.questions.forEach((q,qi) => {
+    if (!Array.isArray(q) || (q[1]!=='f' && q[1]!=='yn')) return;
+    const optional = q[0].indexOf('(women only)') !== -1;
+    const el = document.querySelector('input[name="' + sec.id + '_q' + qi + '"]:checked');
+    if (!optional) required++;
+    if (el) { total += parseInt(el.value)||0; answered++; if (!optional) requiredAnswered++; }
+  });
+  let range = '?';
+  if (answered > 0) range = requiredAnswered < required ? 'i' : total<=sec.g[1] ? 'g' : total<=sec.y[1] ? 'y' : 'r';
+  return {total, answered, required, requiredAnswered, range};
+};
+
 window.recalc = function(sid) {
   const sec = SECTIONS.find(s => s.id === sid);
   if (!sec) return;
-  let total = 0;
-  sec.questions.forEach((q,qi) => {
-    if (!Array.isArray(q) || q[1]==='sub' || q[1]==='exp') return;
-    const el = document.querySelector('input[name="' + sid + '_q' + qi + '"]:checked');
-    if (el) total += parseInt(el.value)||0;
-  });
+  const st = sectionStatus(sec);
+  const total = st.total;
   const numEl  = document.getElementById('snum_'+sid);
   const statEl = document.getElementById('sstat_'+sid);
   const badgeEl= document.getElementById('hbadge_'+sid);
@@ -1263,11 +1282,19 @@ window.recalc = function(sid) {
   if (!numEl) return;
   numEl.textContent = total; sumSc.textContent = total;
   ['g','y','r'].forEach(x => { const el=document.getElementById('tb_'+x+'_'+sid); if(el) el.className='thresh-box t-'+x; });
+  if (st.range==='?' || st.range==='i') {
+    const txt = st.range==='?' ? 'Not yet answered' : 'Incomplete \u2014 '+st.requiredAnswered+' of '+st.required+' answered';
+    statEl.className='ssf-status'; statEl.textContent=txt;
+    badgeEl.style.background=''; badgeEl.textContent = st.range==='?' ? 'Score: \u2014' : 'Score: '+total+'  |  Incomplete';
+    sumRng.innerHTML='<span class="spill-na">'+(st.range==='?' ? '\u2014' : 'Incomplete')+'</span>';
+    updateProgress();
+    return;
+  }
   let range, label;
   if (total<=sec.g[1])      { range='g'; label='\ud83d\udfe2 Green';  document.getElementById('tb_g_'+sid).className='thresh-box active-g'; badgeEl.style.background='rgba(45,122,79,0.35)'; }
   else if (total<=sec.y[1]) { range='y'; label='\ud83d\udfe1 Yellow'; document.getElementById('tb_y_'+sid).className='thresh-box active-y'; badgeEl.style.background='rgba(122,88,0,0.35)'; }
   else                      { range='r'; label='\ud83d\udd34 Red';    document.getElementById('tb_r_'+sid).className='thresh-box active-r'; badgeEl.style.background='rgba(139,26,26,0.35)'; }
-  const msgs={g:'\u2713 Green \u2014 Low pattern match',y:'\u26a0 Yellow \u2014 Pattern may warrant follow-up',r:'\u2716 Red \u2014 Strong pattern \u2014 priority for discussion'};
+  const msgs={g:'\u2713 Green \u2014 Low score',y:'\u26a0 Yellow \u2014 Moderate score \u2014 worth discussing',r:'\u2716 Red \u2014 High score \u2014 priority for discussion'};
   statEl.className='ssf-status s-'+range; statEl.textContent=msgs[range];
   badgeEl.textContent='Score: '+total+'  |  '+label;
   sumRng.innerHTML='<span class="spill-'+range+'">'+label+'</span>';
@@ -1278,16 +1305,15 @@ window.copyScores = function() {
   const name = (document.querySelector('input[placeholder="Full name"]')||{}).value||'(not entered)';
   const dateFields = document.querySelectorAll('input[placeholder="MM / DD / YYYY"]');
   const date = (dateFields[1]||{}).value||'(not entered)';
-  const RL = {g:'\ud83d\udfe2 Green',y:'\ud83d\udfe1 Yellow',r:'\ud83d\udd34 Red','?':'\u25a1 Not completed'};
+  const RL = {g:'\ud83d\udfe2 Green',y:'\ud83d\udfe1 Yellow',r:'\ud83d\udd34 Red',i:'\u25a1 Incomplete','?':'\u25a1 Not completed'};
   let lines = ['KATALYST HEALTH \u2014 ADVANCED CLINICAL ASSESSMENT','Client: '+name+'    Date: '+date,'\u2501'.repeat(54),''];
   let lg='';
   SECTIONS.forEach(sec=>{
     if(sec.group!==lg){lg=sec.group;lines.push('\n\u2500\u2500 '+sec.group.toUpperCase()+' \u2500\u2500');}
     const s=document.getElementById('snum_'+sec.id);
     const score=s?s.textContent:'0'; const n=parseInt(score)||0;
-    let rk='?';
-    if(document.querySelector('input[name^="'+sec.id+'_"]:checked')){rk=n<=sec.g[1]?'g':n<=sec.y[1]?'y':'r';}
-    lines.push((sec.title.substring(0,40)+'                                          ').substring(0,42)+' Score:'+(('    '+score).slice(-4))+'  '+RL[rk]+'  [G:0-'+sec.g[1]+' Y:'+sec.y[0]+'-'+sec.y[1]+' R:'+sec.r[0]+'+]');
+    const st=sectionStatus(sec); const rk=st.range;
+    lines.push((sec.title.substring(0,40)+'                                          ').substring(0,42)+' Score:'+(('    '+score).slice(-4))+'  '+RL[rk]+(rk==='i'?' ('+st.requiredAnswered+'/'+st.required+')':'')+'  [G:0-'+sec.g[1]+' Y:'+sec.y[0]+'-'+sec.y[1]+' R:'+sec.r[0]+'+]');
   });
   lines.push('','\u2501'.repeat(54),'Katalyst Health | katka@katalysthealth.us | 206-354-7242','katalystforhealth.com');
   navigator.clipboard.writeText(lines.join('\n')).then(()=>{
@@ -1487,6 +1513,7 @@ function saveState() {
     checkboxes: checkboxes,
     textInputs: textInputs,
     currentStep: currentStep,
+    v: 2,
     savedAt: new Date().toISOString()
   }));
 }
@@ -1498,8 +1525,26 @@ function restoreState() {
   try { state = JSON.parse(raw); } catch(e) { return; }
 
   if (state.radios) {
+    // Saves from before Nov 2026 scored every Yes as 1 point; map those onto today's Yes values.
+    var questionOf = function(name) {
+      var i = name.lastIndexOf('_q');
+      var sec = SECTIONS.find(function(s) { return s.id === name.slice(0, i); });
+      return sec ? { sec: sec, q: sec.questions[+name.slice(i + 2)] } : null;
+    };
+    var findRadio = function(name, value) {
+      return document.querySelector('input[name="' + name + '"][value="' + value + '"]');
+    };
+    var legacy = !state.v && Object.keys(state.radios).some(function(name) {
+      var hit = questionOf(name);
+      return hit && hit.q && hit.q[1] === 'yn' && state.radios[name] !== '0' && !findRadio(name, state.radios[name]);
+    });
     Object.keys(state.radios).forEach(function(name) {
-      var radio = document.querySelector('input[name="' + name + '"][value="' + state.radios[name] + '"]');
+      var hit = questionOf(name);
+      var q = hit && hit.q;
+      // Was Yes/No, now rated Never to Regularly: leave it for the client to rate again.
+      if (legacy && q && hit.sec.id === 'mito' && q[0].indexOf('Eyes sensitive') === 0) return;
+      var radio = findRadio(name, state.radios[name]);
+      if (!radio && q && q[1] === 'yn' && state.radios[name] !== '0') radio = document.getElementById(name + '_y');
       if (radio) radio.checked = true;
     });
   }
@@ -1576,7 +1621,7 @@ window.emailResults = function() {
   var name = (document.querySelector('input[placeholder="Full name"]') || {}).value || '(not entered)';
   var dateFields = document.querySelectorAll('input[placeholder="MM / DD / YYYY"]');
   var date = (dateFields[1] || {}).value || '(not entered)';
-  var RL = { g: 'Green', y: 'Yellow', r: 'Red', '?': 'Not completed' };
+  var RL = { g: 'Green', y: 'Yellow', r: 'Red', i: 'Incomplete', '?': 'Not completed' };
   var lines = ['KATALYST HEALTH - ADVANCED CLINICAL ASSESSMENT', 'Client: ' + name + '    Date: ' + date, ''];
   var lg = '';
   SECTIONS.forEach(function(sec) {
@@ -1584,11 +1629,9 @@ window.emailResults = function() {
     var s = document.getElementById('snum_' + sec.id);
     var score = s ? s.textContent : '0';
     var n = parseInt(score) || 0;
-    var rk = '?';
-    if (document.querySelector('input[name^="' + sec.id + '_"]:checked')) {
-      rk = n <= sec.g[1] ? 'g' : n <= sec.y[1] ? 'y' : 'r';
-    }
-    lines.push(sec.title + ': ' + score + ' pts - ' + RL[rk]);
+    var st = sectionStatus(sec);
+    var rk = st.range;
+    lines.push(sec.title + ': ' + score + ' pts - ' + RL[rk] + (rk === 'i' ? ' (' + st.requiredAnswered + ' of ' + st.required + ' answered)' : ''));
   });
   var fileName = (name.replace(/[^a-zA-Z0-9 ]/g, '').trim().replace(/\s+/g, '_') || 'Assessment');
   var now = new Date();
