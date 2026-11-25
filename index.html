@@ -46,6 +46,8 @@ body{font-family:'Inter',sans-serif;background:var(--k-bg);color:var(--k-text);f
 .link-row:last-child{border-bottom:0}
 .link-q{flex:1}
 .link-src{color:var(--k-muted);font-size:0.75rem;white-space:nowrap}
+.link-go{margin-left:6px;border:0;background:none;padding:0;color:var(--k-dark);font:inherit;font-size:0.78rem;font-weight:600;text-decoration:underline;cursor:pointer}
+.q-row.link-flash,.yn-row.link-flash{outline:3px solid #e8b84a;outline-offset:-3px;transition:outline-color .3s}
 .link-ans{min-width:96px;text-align:right;font-weight:600;font-size:0.8rem;color:var(--k-muted)}
 .notice-collapsed .notice-summary{display:flex}
 .notice-summary{display:none;align-items:center;gap:8px;padding:8px 0;font-size:0.82rem;color:var(--k-muted);font-family:'Inter',sans-serif}
@@ -1341,7 +1343,8 @@ function recalcOne(sid) {
   linksOf(sec).forEach((l, i) => {
     const el = document.getElementById('lnk_' + sid + '_' + i); if (!el) return;
     const lv = linkLevel(l);
-    el.textContent = lv === null ? 'Not answered' : l.q[1] === 'yn' ? (lv ? 'Yes' : 'No') : FL[lv];
+    if (lv === null) el.innerHTML = 'Not answered <button type="button" class="link-go" onclick="goToQuestion(\'' + l.sid + '\',' + l.qi + ')">Go to question</button>';
+    else el.textContent = l.q[1] === 'yn' ? (lv ? 'Yes' : 'No') : FL[lv];
   });
   const numEl  = document.getElementById('snum_'+sid);
   const statEl = document.getElementById('sstat_'+sid);
@@ -1369,6 +1372,33 @@ function recalcOne(sid) {
   sumRng.innerHTML='<span class="spill-'+range+'">'+label+'</span>';
   updateProgress();
 }
+window.goToQuestion = function(sid, qi) {
+  const steps = [...document.querySelectorAll('.wizard-step')];
+  const n = steps.findIndex(st => st.contains(document.getElementById('snum_' + sid))) + 1;
+  if (n > 0 && n !== currentStep) goToStep(n);
+  const input = document.querySelector('input[name="' + sid + '_q' + qi + '"]');
+  const row = input && input.closest('.q-row, .yn-row');
+  if (!row) return;
+  row.scrollIntoView({block: 'center'});
+  row.classList.add('link-flash'); setTimeout(() => row.classList.remove('link-flash'), 2200);
+};
+
+// Word-for-word duplicates over the same 90 days: answering one fills in the others (each keeps its own points)
+window.TWINS = [[['drainage','Kidney problems'],['radioactive','Kidney problems']],[['hyperthyroid','Insomnia'],['mercury','Insomnia']],[['hyperthyroid','Night sweats'],['babesia','Night sweats'],['spike','Night sweats']],[['parasites','Anemia (low iron/hemoglobin on blood test)'],['babesia','Anemia (low iron/hemoglobin on blood test)']],[['parasites','Loss of appetite'],['spike','Loss of appetite'],['radioactive','Loss of appetite']],[['parasites','History of or currently have cancer?'],['radioactive','History of or currently have cancer?']],[['lymesymptoms','Difficulty swallowing'],['radioactive','Difficulty swallowing']],[['lymesymptoms','Muscle twitching'],['generaltox','Muscle twitching']],[['lymesymptoms','Headaches'],['babesia','Headaches'],['spike','Headaches']]].map(g => g.map(([sid, text]) => {
+  const sec = SECTIONS.find(s => s.id === sid);
+  return sid + '_q' + sec.questions.findIndex(q => Array.isArray(q) && q[0].replace(/^\u2605 /, '') === text);
+}));
+window.syncTwins = function(radio) {
+  const grp = TWINS.find(g => g.indexOf(radio.name) !== -1);
+  if (!grp) return;
+  const suffix = radio.id.slice(radio.name.length);   // _0.._3 or _y / _n
+  grp.forEach(name => {
+    if (name === radio.name) return;
+    const twin = document.getElementById(name + suffix);
+    if (twin && !twin.checked) { twin.checked = true; recalc(name.slice(0, name.lastIndexOf('_q'))); }
+  });
+};
+
 window.recalc = function(sid) {
   recalcOne(sid);
   SECTIONS.forEach(s => { if (s.id !== sid && linksOf(s).some(l => l.sid === sid)) recalcOne(s.id); });
@@ -1720,7 +1750,10 @@ window.emailResults = function() {
   window.open(mailto, '_blank');
 };
 
-document.getElementById('form-root').addEventListener('change', saveState);
+document.getElementById('form-root').addEventListener('change', function(e) {
+  if (e.target && e.target.type === 'radio') syncTwins(e.target);
+  saveState();
+});
 document.querySelectorAll('.client-bar .field input').forEach(function(inp) {
   inp.addEventListener('input', saveState);
 });
