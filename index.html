@@ -282,7 +282,7 @@ body{font-family:'Inter',sans-serif;background:var(--k-bg);color:var(--k-text);f
   </div>
   <div class="notice-card notice-important">
     <div class="notice-card-header">&#9888;&#65039; Complete Other Forms First</div>
-    This form is designed for complex cases and works alongside your MC Scorecard and Lifestyle &amp; Medical History intake forms. Please complete those first. This form covers areas those forms do not &mdash; pathogens, co-infections, mold/CIRS, MCAS, POTS, and heavy metal toxicity.
+    This form is designed for complex cases and works alongside your MC Scorecard and Lifestyle &amp; Medical History intake forms. Please complete those first. This form covers areas those forms do not &mdash; pathogens, co-infections, mold/CIRS, MCAS, POTS, spike protein / long COVID, and heavy metal toxicity.
   </div>
   <div class="notice-card notice-instructions">
     <div class="notice-card-header">&#128203; How to Fill Out This Form</div>
@@ -808,6 +808,70 @@ const SECTIONS = [
   ['History of Lyme disease, mold illness, or EBV/viral trigger','yn',[0,1]],
 ]},
 
+// Moved from the MC Scorecard (Nov 2026). Custom cluster, not part of the FDN framework.
+{ id:'spike', title:'Spike Protein / Long COVID',
+  group:'Immune Dysregulation',
+  g:[0,30], y:[31,70], r:[71,153],
+  bartNote:'★ = Hallmark item (counts double). A custom symptom cluster informed by peer-reviewed long COVID literature and integrative-practitioner frameworks. Many of these symptoms overlap with the POTS and MCAS sections. This is a screening indicator, not diagnostic — helps guide follow-up questions and testing priorities.',
+  questions:[
+  ['— Systemic & Post-Exertional —','sub'],
+  ['★ Fatigue not relieved by rest or sleep','f',_B],
+  ['★ Post-exertional malaise — symptoms worsen after even minor physical or mental effort (often delayed, and may last days or weeks)','f',_B],
+  ['Symptoms flare after physical OR mental exertion','f',_A],
+  ['Reduced stamina / exercise intolerance','f',_A],
+  ['Flu-like malaise or feeling feverish','f',_A],
+  ['Recurrent fever and/or chills','f',_A],
+  ['Night sweats','f',_A],
+  ['Changes in menstrual cycle, timing, flow, or symptoms (women only)','f',_A],
+  ['New or worsened chemical, food, or medication sensitivities','f',_A],
+  ['— Neurological & Cognitive —','sub'],
+  ['Brain fog','f',_A],
+  ['Difficulty concentrating or focusing','f',_A],
+  ['Short-term memory problems','f',_A],
+  ['Word-finding difficulty','f',_A],
+  ['Headaches','f',_A],
+  ['Altered or loss of smell','f',_A],
+  ['Altered or loss of taste','f',_A],
+  ['Tingling, numbness, or nerve pain','f',_A],
+  ['Ringing in the ears (tinnitus)','f',_A],
+  ['Blurred vision','f',_A],
+  ['Light or noise sensitivity','f',_A],
+  ['Insomnia or unrefreshing sleep','f',_A],
+  ['New or worsened anxiety','f',_A],
+  ['New or worsened low mood / depression','f',_A],
+  ['— Autonomic / Dysautonomia —','sub'],
+  ['Rapid heartbeat or palpitations','f',_A],
+  ['Racing heart or dizziness within minutes of standing','f',_A],
+  ['Lightheadedness or feeling faint on standing','f',_A],
+  ['Blood pressure swings (high or low)','f',_A],
+  ['Temperature dysregulation (running hot or cold)','f',_A],
+  ['Abnormal sweating (too much or unable to sweat)','f',_A],
+  ['— Cardiovascular, Microclot & Oxygen Delivery —','sub'],
+  ['Chest pain or chest tightness','f',_A],
+  ['Shortness of breath or air hunger','f',_A],
+  ['Breathlessness with mild exertion','f',_A],
+  ['Cold hands and feet / poor circulation','f',_A],
+  ['Muscle aches or deep muscle pain','f',_A],
+  ['Joint pain or swelling','f',_A],
+  ['Unusual bruising or clotting concerns','f',_A],
+  ['— Immune & Mast Cell —','sub'],
+  ['Hives, rashes, or flushing','f',_A],
+  ['Itching','f',_A],
+  ['Reactions to foods, smells, heat, or alcohol','f',_A],
+  ['Wheezing or chest tightness with exposures','f',_A],
+  ['Nasal congestion or sinus symptoms','f',_A],
+  ['— Gastrointestinal —','sub'],
+  ['Nausea','f',_A],
+  ['Abdominal pain, cramping, or bloating','f',_A],
+  ['Diarrhea and/or constipation','f',_A],
+  ['Loss of appetite','f',_A],
+  ['New food intolerances','f',_A],
+  ['— Respiratory & Infection-Adjacent —','sub'],
+  ['Persistent cough','f',_A],
+  ['Recurrent sore throat or swollen glands','f',_A],
+  ['Symptom flares with stress or minor illness','f',_A],
+]},
+
 // ══════════════════════════════════════════════════
 // TOXICANTS & TOXINS
 // ══════════════════════════════════════════════════
@@ -961,7 +1025,7 @@ const SECTIONS = [
 
 { id:'aluminum', title:'Aluminum Toxicity',
   group:'Toxicants & Toxins',
-  g:[0,8], y:[9,19], r:[20,42], questions:[
+  g:[0,8], y:[9,19], r:[20,43], questions:[
   ['Use conventional antiperspirant/deodorant containing aluminum','f',_A],
   ['Cook regularly with aluminum cookware or foil with acidic foods','f',_A],
   ['Take antacids regularly (many contain aluminum hydroxide)','f',_A],
@@ -970,7 +1034,7 @@ const SECTIONS = [
   ['Use conventional cosmetics or skincare with aluminum compounds','f',_A],
   ['★ Progressive memory loss or cognitive decline','f',_B],
   ['★ Bone pain, muscle weakness, or unexplained fractures','f',_B],
-  ['★ Dialysis patient or history of kidney failure (highest exposure risk)','yn',[0,1]],
+  ['★ Dialysis patient or history of kidney failure (highest exposure risk)','yn',[0,2]],
   ['Word-finding difficulty, slowed speech, or confusion','f',_A],
   ['Tremors or loss of coordination','f',_A],
   ['Personality or behavioral changes (irritability, aggression)','f',_A],
@@ -981,7 +1045,7 @@ const SECTIONS = [
 { id:'mold', title:'Mycotoxins / Mold & CIRS',
   group:'Toxicants & Toxins',
   g:[0,25], y:[26,70], r:[71,160],
-  bartNote:'★ = Hallmark item. Symptoms that may be associated with mycotoxin exposure and CIRS, based on Shoemaker CIRS cluster research and Dr. Jill Crista\'s clinical framework (Break the Mold). This is a screening indicator, not diagnostic. A high score helps guide follow-up environmental testing and CIRS workup priorities.',
+  bartNote:'★ = Hallmark item. Symptoms that may be associated with mycotoxin exposure and CIRS. This is a screening indicator, not diagnostic. A high score helps guide follow-up environmental testing and CIRS workup priorities.',
   questions:[
   ['— Environmental Exposure & Building Correlation —','sub'],
   ['★ Symptoms clearly improve when away from home or work for 3+ days','f',_B],
