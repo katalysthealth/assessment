@@ -381,18 +381,18 @@ const SECTIONS = [
 // Kept: infection history, exercise-specific intolerance, thermal dysregulation, unique autonomic items
 { id:'mito', title:'Mitochondrial Dysfunction — Unique Indicators',
   group:'Immune History & Energy Systems',
-  g:[0,8], y:[9,20], r:[21,50], questions:[
-  ['History of chronic infections (EBV, CMV, Lyme, mold, etc.)?','yn',[0,1]],
+  g:[0,6], y:[7,19], r:[20,46], questions:[
+  ['History of chronic infections (EBV, CMV, Lyme, mold, etc.)?','yn',[0,5]],
   ['Unable to tolerate much exercise — crashes after activity','f',_A],
   ['Poor exercise or muscle stamina — muscles fatigue very quickly','f',_A],
-  ['Low muscle tone despite exercise?','yn',[0,1]],
+  ['Low muscle tone despite exercise?','yn',[0,5]],
   ['Migraines or seizures','f',_A],
   ['Unexplained breathing problems or shortness of breath','f',_A],
-  ['Low body temperature (below 97.5°F / 36.4°C)?','yn',[0,1]],
+  ['Low body temperature (below 97.5°F / 36.4°C)?','yn',[0,5]],
   ['Intolerant to heat — heat exposure worsens all symptoms','f',_A],
-  ['Low thyroid lab numbers despite being treated?','yn',[0,1]],
-  ['Little or no skin sweating even during exercise or heat','yn',[0,1]],
-  ['Eyes sensitive to bright or direct light','yn',[0,1]],
+  ['Low thyroid lab numbers despite being treated?','yn',[0,5]],
+  ['Little or no skin sweating even during exercise or heat','yn',[0,5]],
+  ['Eyes sensitive to bright or direct light','f',_A],
   ['Dizziness upon standing up quickly (orthostatic)','f',_A],
 ]},
 
@@ -400,7 +400,7 @@ const SECTIONS = [
 // Kept: lymphatic/vascular-specific items and those not in MC Scorecard
 { id:'drainage', title:'Drainage & Lymphatic Dysfunction — Unique Indicators',
   group:'Immune History & Energy Systems',
-  g:[0,9], y:[10,22], r:[23,52], questions:[
+  g:[0,8], y:[9,20], r:[21,42], questions:[
   ['Wake up between 1am and 4am (not for bathroom)','f',_A],
   ['Edema — swelling or retaining extra fluids in body','f',_A],
   ['Yellowish tinge to skin or eyes','f',_A],
@@ -422,12 +422,12 @@ const SECTIONS = [
 // Kept only items NOT in MC Scorecard (removed: muscle cramping, bone loss, crave salt, edema, urination, thirst — all in MC)
 { id:'minerals', title:'Minerals & Electrolytes — Deficiency Markers',
   group:'Nutrient & Thyroid Status',
-  g:[0,5], y:[6,12], r:[13,30], questions:[
+  g:[0,10], y:[11,20], r:[21,33], questions:[
   ['Unable to hold breath for long periods (less than 20 seconds comfortably)','f',_A],
   ['Shallow or rapid breathing at rest','f',_A],
-  ['History of carpal tunnel syndrome','yn',[0,1]],
-  ['History of lower right abdominal pains or ileocecal valve problems','yn',[0,1]],
-  ['History of stress fracture(s)','yn',[0,1]],
+  ['History of carpal tunnel syndrome','yn',[0,5]],
+  ['History of lower right abdominal pains or ileocecal valve problems','yn',[0,5]],
+  ['History of stress fracture(s)','yn',[0,5]],
   ['Whites of eyes (sclera) have a blue tint','f',_A],
   ['White spots on fingernails','f',_A],
   ['Crave chocolate specifically (magnesium marker)','f',_A],
@@ -438,7 +438,7 @@ const SECTIONS = [
 // Kept: cold intolerance, excessive sleep, eyebrow thinning, dry skin pattern, menstrual bleeding
 { id:'hypothyroid', title:'Hypothyroid — Distinguishing Indicators',
   group:'Nutrient & Thyroid Status',
-  g:[0,5], y:[6,12], r:[13,28], questions:[
+  g:[0,5], y:[6,12], r:[13,21], questions:[
   ['Feel cold — hands, feet, or whole body most of the time','f',_A],
   ['Require excessive sleep (10+ hours) just to function','f',_A],
   ['★ Thinning of the outer third of eyebrows (highly specific to hypothyroid)','f',_B],
@@ -467,7 +467,7 @@ const SECTIONS = [
 // Kept: unique HPA framing items not in MC Scorecard
 { id:'hpa', title:'HPA Axis / Adrenal Dysfunction — Unique Indicators',
   group:'HPA Axis & Autonomic Nervous System',
-  g:[0,8], y:[9,20], r:[21,54], questions:[
+  g:[0,5], y:[6,13], r:[14,29], questions:[
   ['★ "Wired but tired" — exhausted but unable to relax or sleep','f',_B],
   ['Second wind of energy late in the evening (10pm or later)','f',_A],
   ['Hypoglycemia symptoms when meals are delayed (shaking, panic, severe irritability)','f',_A],
@@ -481,7 +481,7 @@ const SECTIONS = [
 
 { id:'pots', title:'POTS / Dysautonomia',
   group:'HPA Axis & Autonomic Nervous System',
-  g:[0,10], y:[11,25], r:[26,80],
+  g:[0,10], y:[11,25], r:[26,69],
   bartNote:'★ = Hallmark item. A pattern sometimes seen with POTS/dysautonomia — characterised by orthostatic heart rate changes (≥30 bpm on standing) and autonomic symptoms. This is a screening indicator, not diagnostic. Helps guide whether formal tilt-table or autonomic testing is a priority.',
   questions:[
   ['— Orthostatic & Standing Intolerance —','sub'],
@@ -516,7 +516,7 @@ const SECTIONS = [
 // ══════════════════════════════════════════════════
 { id:'parasites', title:'Parasite Infection',
   group:'Pathogens',
-  g:[0,46], y:[47,96], r:[97,242], questions:[
+  g:[0,45], y:[46,95], r:[96,239], questions:[
   ['Restless sleep — toss, turn, or wake up often','f',_A],
   ['Skin issues, rashes, itches, hives, eczema, or acne','f',_B],
   ['Frequent diarrhea or loose stools','f',_A],
@@ -565,9 +565,9 @@ const SECTIONS = [
   ['Dry lips','f',_A],
   ['Drooling while asleep','f',_A],
   ['Swim in creeks, rivers, or lakes','f',_B],
-  ['History of Giardia, pinworms, or other parasites?','yn',[0,1]],
-  ['Work in childcare?','yn',[0,1]],
-  ['History of or currently have cancer?','yn',[0,1]],
+  ['History of Giardia, pinworms, or other parasites?','yn',[0,6]],
+  ['Work in childcare?','yn',[0,6]],
+  ['History of or currently have cancer?','yn',[0,20]],
 ]},
 
 { id:'sibo', title:'SIBO (Small Intestinal Bacterial Overgrowth)',
@@ -599,7 +599,7 @@ const SECTIONS = [
 
 { id:'lymesymptoms', title:'Lyme Disease — Current Symptoms',
   group:'Lyme & Co-Infections',
-  g:[0,31], y:[32,95], r:[96,230],
+  g:[0,28], y:[29,89], r:[90,214],
   bartNote:'Symptoms that may be associated with active or chronic Lyme disease. Many of these symptoms can be seen in other conditions. This is a screening indicator, not diagnostic — helps guide follow-up questions and testing priorities.',
   questions:[
   ['Arthritis-like joint pain or swelling','f',_B],
@@ -683,7 +683,7 @@ const SECTIONS = [
 
 { id:'bartonella', title:'Bartonella',
   group:'Lyme & Co-Infections',
-  g:[0,30], y:[31,80], r:[81,228],
+  g:[0,22], y:[23,60], r:[61,210],
   bartNote:'★ = Hallmark symptom (counts double). Rate based on the past 6–12 months. Scores reflect a pattern sometimes seen with Bartonella — a screening indicator, not diagnostic. Many of these symptoms can be seen in other conditions. Helps guide follow-up questions and testing priorities.',
   questions:[
   ['— General & Constitutional —','sub'],
@@ -762,7 +762,7 @@ const SECTIONS = [
 // ══════════════════════════════════════════════════
 { id:'mcas', title:'Mast Cell Activation Syndrome (MCAS)',
   group:'Immune Dysregulation',
-  g:[0,15], y:[16,40], r:[41,130],
+  g:[0,15], y:[16,40], r:[41,126],
   bartNote:'★ = Hallmark item (×2). A pattern that may be associated with MCAS can be seen when symptoms recur across multiple organ systems. This is a screening indicator, not diagnostic. Helps guide follow-up questions, testing priorities, and whether formal MCAS workup is warranted.',
   questions:[
   ['— Core Diagnostic Indicators —','sub'],
@@ -815,7 +815,7 @@ const SECTIONS = [
 // Kept: symptom items and clinical exposure indicators not in Lifestyle form
 { id:'generaltox', title:'General Toxicity — Symptom Burden',
   group:'Toxicants & Toxins',
-  g:[0,6], y:[7,15], r:[16,33],
+  g:[0,7], y:[8,20], r:[21,33],
   bartNote:'Symptom patterns that may be associated with cumulative toxic burden. Many of these symptoms overlap across conditions. This is a screening indicator, not diagnostic — helps guide follow-up questions and testing priorities.',
   questions:[
   ['Receive excessive static shocks compared to others around you','f',_A],
@@ -833,11 +833,11 @@ const SECTIONS = [
 
 { id:'radioactive', title:'Radioactive Elements',
   group:'Toxicants & Toxins',
-  g:[0,16], y:[17,40], r:[41,146], questions:[
-  ['History of or currently have cancer?','yn',[0,1]],
-  ['Suppressed immune system?','yn',[0,1]],
-  ['Osteoporosis or osteopenia diagnosis?','yn',[0,1]],
-  ['Can\'t clear infections despite following pathogen protocols?','yn',[0,1]],
+  g:[0,14], y:[15,37], r:[38,134], questions:[
+  ['History of or currently have cancer?','yn',[0,20]],
+  ['Suppressed immune system?','yn',[0,6]],
+  ['Osteoporosis or osteopenia diagnosis?','yn',[0,6]],
+  ['Can\'t clear infections despite following pathogen protocols?','yn',[0,6]],
   ['Chronic Candida infection','f',_B],
   ['Fatigue','f',_B],
   ['Anemia','f',_B],
@@ -868,7 +868,7 @@ const SECTIONS = [
 // Kept: clinical exposure items not in Lifestyle form + all symptom items
 { id:'mercury', title:'Mercury Toxicity',
   group:'Toxicants & Toxins',
-  g:[0,9], y:[10,23], r:[24,51], questions:[
+  g:[0,11], y:[12,25], r:[26,51], questions:[
   ['Worked in a dental office?','f',_A],
   ['Have had flu shots','f',_A],
   ['Have had allergy shots','f',_A],
@@ -892,7 +892,7 @@ const SECTIONS = [
 // Trimmed: removed obvious MC Scorecard overlaps (depression, dry skin, anemia as isolated symptoms)
 { id:'lead', title:'Lead Toxicity',
   group:'Toxicants & Toxins',
-  g:[0,30], y:[31,55], r:[56,110], questions:[
+  g:[0,31], y:[32,56], r:[57,108], questions:[
   ['Lived in a home built before 1978','f',_B],
   ['Do home renovation (sandblasting, moving walls)','f',_B],
   ['Lived in a mining community or near industrial area','f',_B],
@@ -921,7 +921,7 @@ const SECTIONS = [
 
 { id:'arsenic', title:'Arsenic Toxicity',
   group:'Toxicants & Toxins',
-  g:[0,12], y:[13,28], r:[29,90], questions:[
+  g:[0,10], y:[11,23], r:[24,52], questions:[
   ['Drink well water or unfiltered groundwater','yn',[0,1]],
   ['Eat rice or rice products daily','f',_A],
   ['Eat shellfish, seaweed, or high-seafood diet regularly','f',_A],
@@ -943,7 +943,7 @@ const SECTIONS = [
 
 { id:'cadmium', title:'Cadmium Toxicity',
   group:'Toxicants & Toxins',
-  g:[0,10], y:[11,24], r:[25,84], questions:[
+  g:[0,8], y:[9,18], r:[19,40], questions:[
   ['Current or former smoker','yn',[0,1]],
   ['Significant secondhand smoke exposure over many years','f',_A],
   ['Work in battery manufacturing, welding, electroplating, or pigment production','yn',[0,1]],
@@ -961,7 +961,7 @@ const SECTIONS = [
 
 { id:'aluminum', title:'Aluminum Toxicity',
   group:'Toxicants & Toxins',
-  g:[0,10], y:[11,24], r:[25,84], questions:[
+  g:[0,8], y:[9,19], r:[20,42], questions:[
   ['Use conventional antiperspirant/deodorant containing aluminum','f',_A],
   ['Cook regularly with aluminum cookware or foil with acidic foods','f',_A],
   ['Take antacids regularly (many contain aluminum hydroxide)','f',_A],
@@ -997,7 +997,7 @@ const SECTIONS = [
   ['Spending time in basement causes or worsens symptoms','f',_C],
   ['Reactions to supplements opposite of expected (e.g., antifungals or binders cause flare)','f',_A],
   ['Others in your household have similar unexplained symptoms','yn',[0,1]],
-  ['— Neurological & Cognitive (Shoemaker Clusters 8–9) —','sub'],
+  ['— Neurological & Cognitive —','sub'],
   ['★ Brain fog — profound difficulty thinking clearly','f',_B],
   ['★ Word-finding difficulty or substituting wrong words','f',_B],
   ['★ Disorientation — confused, difficulty concentrating, getting lost','f',_B],
@@ -1006,14 +1006,14 @@ const SECTIONS = [
   ['Mental arithmetic or following sequences becomes difficult','f',_A],
   ['Personality or behavioral changes noticed by others','f',_A],
   ['Emotional lability — sudden mood shifts with no clear cause','f',_A],
-  ['— Fatigue & Pain (Shoemaker Clusters 1–2) —','sub'],
+  ['— Fatigue & Pain —','sub'],
   ['★ Extreme or unusual fatigue not explained by activity level','f',_B],
   ['★ Ice pick pains — sudden stabbing pains in random locations','f',_B],
   ['Weakness, achiness, or assorted unexplained pains','f',_A],
   ['Morning stiffness in joints or muscles','f',_A],
   ['Joint pain without injury','f',_A],
   ['Frontal headaches or migraines','f',_A],
-  ['— Vision, Eyes & ENT (Shoemaker Clusters 3–4) —','sub'],
+  ['— Vision, Eyes & ENT —','sub'],
   ['★ Light sensitivity — bright light causes pain or discomfort','f',_B],
   ['Red or burning eyes','f',_A],
   ['Blurry vision or difficulty focusing','f',_A],
@@ -1021,12 +1021,12 @@ const SECTIONS = [
   ['Recurrent sinus infections','f',_A],
   ['Metallic or unusual taste in mouth','f',_A],
   ['Hoarse voice or chronic throat clearing','f',_A],
-  ['— Respiratory (Shoemaker Cluster 5) —','sub'],
+  ['— Respiratory —','sub'],
   ['Unexplained or chronic cough','f',_A],
   ['Wheezing or whistling in chest','f',_A],
   ['Chest tightness on waking or in specific buildings','f',_A],
   ['Shortness of breath during normal activity','f',_A],
-  ['— Autonomic (Shoemaker Clusters 11–13) —','sub'],
+  ['— Autonomic —','sub'],
   ['★ Unusual thirst with frequent urination not explained by diabetes','f',_B],
   ['★ Static shocks — you experience them far more than others around you','f',_B],
   ['Night sweats or unexplained temperature fluctuations','f',_A],
