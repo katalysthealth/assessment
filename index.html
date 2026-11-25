@@ -396,7 +396,8 @@ const SECTIONS = [
 // Kept: infection history, exercise-specific intolerance, thermal dysregulation, unique autonomic items
 { id:'mito', title:'Mitochondrial Dysfunction — Unique Indicators',
   group:'Immune History & Energy Systems',
-  g:[0,6], y:[7,19], r:[20,46], questions:[
+  g:[0,10], y:[11,33], r:[34,78],
+  links:[['spike','Brain fog'],['spike','Difficulty concentrating or focusing'],['parasites','Mood disorder, depression, anxiety'],['generaltox','Issues processing new information'],['radioactive','Suppressed immune system?',5],['parasites','Frequent colds, flu, or sore throats'],['parasites','Need for extra sleep, wake unrefreshed'],['spike','Insomnia or unrefreshing sleep'],['lymesymptoms','Fatigue, lack of energy'],['lymesymptoms','Sexual dysfunction or low libido']], questions:[
   ['History of chronic infections (EBV, CMV, Lyme, mold, etc.)?','yn',[0,5]],
   ['Unable to tolerate much exercise — crashes after activity','f',_A],
   ['Poor exercise or muscle stamina — muscles fatigue very quickly','f',_A],
@@ -415,7 +416,8 @@ const SECTIONS = [
 // Kept: lymphatic/vascular-specific items and those not in MC Scorecard
 { id:'drainage', title:'Drainage & Lymphatic Dysfunction — Unique Indicators',
   group:'Immune History & Energy Systems',
-  g:[0,8], y:[9,20], r:[21,42], questions:[
+  g:[0,12], y:[13,31], r:[32,63],
+  links:[['lymesymptoms','Fatigue, lack of energy'],['parasites','Mood disorder, depression, anxiety'],['generaltox','Issues processing new information'],['parasites','Skin issues, rashes, itches, hives, eczema, or acne'],['radioactive','Suppressed immune system?',3],['mold','Morning stiffness in joints or muscles'],['spike','Brain fog']], questions:[
   ['Wake up between 1am and 4am (not for bathroom)','f',_A],
   ['Edema — swelling or retaining extra fluids in body','f',_A],
   ['Yellowish tinge to skin or eyes','f',_A],
@@ -437,7 +439,8 @@ const SECTIONS = [
 // Kept only items NOT in MC Scorecard (removed: muscle cramping, bone loss, crave salt, edema, urination, thirst — all in MC)
 { id:'minerals', title:'Minerals & Electrolytes — Deficiency Markers',
   group:'Nutrient & Thyroid Status',
-  g:[0,10], y:[11,20], r:[21,33], questions:[
+  g:[0,17], y:[18,37], r:[38,59],
+  links:[['drainage','Edema'],['lymesymptoms','Muscle pain or cramps'],['mito','Poor exercise or muscle stamina'],['cadmium','Frequent urination or unusual urine odor'],['mold','Unusual thirst with frequent urination'],['radioactive','Osteoporosis or osteopenia diagnosis?',5],['parasites','Anemia (low iron/hemoglobin on blood test)'],['radioactive','Voice changes or hoarseness']], questions:[
   ['Unable to hold breath for long periods (less than 20 seconds comfortably)','f',_A],
   ['Shallow or rapid breathing at rest','f',_A],
   ['History of carpal tunnel syndrome','yn',[0,5]],
@@ -453,7 +456,8 @@ const SECTIONS = [
 // Kept: cold intolerance, excessive sleep, eyebrow thinning, dry skin pattern, menstrual bleeding
 { id:'hypothyroid', title:'Hypothyroid — Distinguishing Indicators',
   group:'Nutrient & Thyroid Status',
-  g:[0,5], y:[6,12], r:[13,21], questions:[
+  g:[0,9], y:[10,24], r:[25,39],
+  links:[['lymesymptoms','Fatigue, lack of energy'],['lymesymptoms','Depression'],['radioactive','Hair loss'],['generaltox','Issues processing new information'],['lymesymptoms','Sexual dysfunction or low libido'],['radioactive','Fertility problems']], questions:[
   ['Feel cold — hands, feet, or whole body most of the time','f',_A],
   ['Require excessive sleep (10+ hours) just to function','f',_A],
   ['★ Thinning of the outer third of eyebrows (highly specific to hypothyroid)','f',_B],
@@ -482,7 +486,8 @@ const SECTIONS = [
 // Kept: unique HPA framing items not in MC Scorecard
 { id:'hpa', title:'HPA Axis / Adrenal Dysfunction — Unique Indicators',
   group:'HPA Axis & Autonomic Nervous System',
-  g:[0,5], y:[6,13], r:[14,29], questions:[
+  g:[0,8], y:[9,24], r:[25,50],
+  links:[['bartonella','Persistent fatigue despite adequate rest'],['mito','Dizziness upon standing up quickly'],['hypothyroid','Feel cold'],['drainage','Wake up between 1am and 4am'],['spike','Changes in menstrual cycle'],['parasites','Frequent colds, flu, or sore throats'],['lymesymptoms','Sexual dysfunction or low libido']], questions:[
   ['★ "Wired but tired" — exhausted but unable to relax or sleep','f',_B],
   ['Second wind of energy late in the evening (10pm or later)','f',_A],
   ['Hypoglycemia symptoms when meals are delayed (shaking, panic, severe irritability)','f',_A],
@@ -496,7 +501,8 @@ const SECTIONS = [
 
 { id:'pots', title:'POTS / Dysautonomia',
   group:'HPA Axis & Autonomic Nervous System',
-  g:[0,10], y:[11,25], r:[26,69],
+  g:[0,11], y:[12,30], r:[31,82],
+  links:[['spike','Abnormal sweating'],['lymesymptoms','Fatigue, lack of energy'],['bartonella','Urinary frequency, urgency, or bladder pain'],['spike','Insomnia or unrefreshing sleep'],['mito','History of chronic infections',1]],
   bartNote:'★ = Hallmark item. A pattern sometimes seen with POTS/dysautonomia — characterised by orthostatic heart rate changes (≥30 bpm on standing) and autonomic symptoms. This is a screening indicator, not diagnostic. Helps guide whether formal tilt-table or autonomic testing is a priority.',
   questions:[
   ['— Orthostatic & Standing Intolerance —','sub'],
@@ -698,7 +704,8 @@ const SECTIONS = [
 
 { id:'bartonella', title:'Bartonella',
   group:'Lyme & Co-Infections',
-  g:[0,22], y:[23,60], r:[61,210],
+  g:[0,23], y:[24,65], r:[66,225],
+  links:[['lymesymptoms','Tremors'],['parasites','Frequent colds, flu, or sore throats'],['radioactive','Suppressed immune system?',3],['spike','Temperature dysregulation (running hot or cold)'],['lymesymptoms','Sexual dysfunction or low libido']],
   bartNote:'★ = Hallmark symptom (counts double). Rate based on the past 6–12 months. Scores reflect a pattern sometimes seen with Bartonella — a screening indicator, not diagnostic. Many of these symptoms can be seen in other conditions. Helps guide follow-up questions and testing priorities.',
   questions:[
   ['— General & Constitutional —','sub'],
@@ -777,7 +784,8 @@ const SECTIONS = [
 // ══════════════════════════════════════════════════
 { id:'mcas', title:'Mast Cell Activation Syndrome (MCAS)',
   group:'Immune Dysregulation',
-  g:[0,25], y:[26,57], r:[58,126],
+  g:[0,28], y:[29,66], r:[67,144],
+  links:[['mold','Red or burning eyes'],['lymesymptoms','Difficulty swallowing'],['spike','Temperature dysregulation (running hot or cold)'],['bartonella','Anxiety or panic attacks'],['spike','Insomnia or unrefreshing sleep'],['bartonella','Sensory hypersensitivity']],
   bartNote:'★ = Hallmark item (×2). A pattern that may be associated with MCAS can be seen when symptoms recur across multiple organ systems. This is a screening indicator, not diagnostic. Helps guide follow-up questions, testing priorities, and whether formal MCAS workup is warranted.',
   questions:[
   ['— Core Diagnostic Indicators —','sub'],
@@ -894,7 +902,8 @@ const SECTIONS = [
 // Kept: symptom items and clinical exposure indicators not in Lifestyle form
 { id:'generaltox', title:'General Toxicity — Symptom Burden',
   group:'Toxicants & Toxins',
-  g:[0,7], y:[8,20], r:[21,33],
+  g:[0,12], y:[13,36], r:[37,57],
+  links:[['parasites','Headaches or migraines'],['lymesymptoms','Forgetfulness or poor short-term memory'],['mold','Chronic sinus congestion'],['pots','Cold hands and feet despite normal room temperature'],['parasites','Frequent colds, flu, or sore throats'],['mold','Joint pain without injury'],['babesia','Muscle pains or cramps'],['babesia','Abdominal pain']],
   bartNote:'Symptom patterns that may be associated with cumulative toxic burden. Many of these symptoms overlap across conditions. This is a screening indicator, not diagnostic — helps guide follow-up questions and testing priorities.',
   questions:[
   ['Receive excessive static shocks compared to others around you','f',_A],
@@ -912,7 +921,8 @@ const SECTIONS = [
 
 { id:'radioactive', title:'Radioactive Elements',
   group:'Toxicants & Toxins',
-  g:[0,14], y:[15,37], r:[38,134], questions:[
+  g:[0,14], y:[15,39], r:[40,140],
+  links:[['drainage','Sore or swollen breast tissue'],['lymesymptoms','Sexual dysfunction or low libido']], questions:[
   ['History of or currently have cancer?','yn',[0,20]],
   ['Suppressed immune system?','yn',[0,6]],
   ['Osteoporosis or osteopenia diagnosis?','yn',[0,6]],
@@ -971,7 +981,8 @@ const SECTIONS = [
 // Trimmed: removed obvious MC Scorecard overlaps (depression, dry skin, anemia as isolated symptoms)
 { id:'lead', title:'Lead Toxicity',
   group:'Toxicants & Toxins',
-  g:[0,31], y:[32,56], r:[57,108], questions:[
+  g:[0,33], y:[34,61], r:[62,117],
+  links:[['parasites','Anemia (low iron/hemoglobin on blood test)'],['hypothyroid','Dry, rough skin'],['lymesymptoms','Depression']], questions:[
   ['Lived in a home built before 1978','f',_B],
   ['Do home renovation (sandblasting, moving walls)','f',_B],
   ['Lived in a mining community or near industrial area','f',_B],
@@ -1000,7 +1011,8 @@ const SECTIONS = [
 
 { id:'arsenic', title:'Arsenic Toxicity',
   group:'Toxicants & Toxins',
-  g:[0,10], y:[11,23], r:[24,52], questions:[
+  g:[0,10], y:[11,25], r:[26,55],
+  links:[['lymesymptoms','Fatigue, lack of energy']], questions:[
   ['Drink well water or unfiltered groundwater','yn',[0,1]],
   ['Eat rice or rice products daily','f',_A],
   ['Eat shellfish, seaweed, or high-seafood diet regularly','f',_A],
@@ -1022,7 +1034,8 @@ const SECTIONS = [
 
 { id:'cadmium', title:'Cadmium Toxicity',
   group:'Toxicants & Toxins',
-  g:[0,8], y:[9,18], r:[19,40], questions:[
+  g:[0,10], y:[11,24], r:[25,52],
+  links:[['lymesymptoms','Arthritis-like joint pain'],['parasites','Anemia (low iron/hemoglobin on blood test)'],['lymesymptoms','Fatigue, lack of energy'],['bartonella','Loss of appetite or unintended weight loss']], questions:[
   ['Current or former smoker','yn',[0,1]],
   ['Significant secondhand smoke exposure over many years','f',_A],
   ['Work in battery manufacturing, welding, electroplating, or pigment production','yn',[0,1]],
@@ -1040,7 +1053,8 @@ const SECTIONS = [
 
 { id:'aluminum', title:'Aluminum Toxicity',
   group:'Toxicants & Toxins',
-  g:[0,8], y:[9,19], r:[20,43], questions:[
+  g:[0,8], y:[9,21], r:[22,47],
+  links:[['lymesymptoms','Muscle pain or cramps'],['lymerisks','Ever diagnosed with CFS',1]], questions:[
   ['Use conventional antiperspirant/deodorant containing aluminum','f',_A],
   ['Cook regularly with aluminum cookware or foil with acidic foods','f',_A],
   ['Take antacids regularly (many contain aluminum hydroxide)','f',_A],
@@ -1284,18 +1298,18 @@ document.addEventListener('DOMContentLoaded', function() {
 // Colour only once every question is answered; "(women only)" questions are optional.
 window.linksOf = function(sec) {
   if (!sec.links) return [];
-  if (!sec._links) sec._links = sec.links.map(([sid, pre]) => {
+  if (!sec._links) sec._links = sec.links.map(([sid, pre, yes]) => {
     const src = SECTIONS.find(s => s.id === sid);
-    const qi = src.questions.findIndex(q => Array.isArray(q) && q[0].indexOf(pre) === 0);
-    return {sid, qi, q: src.questions[qi], title: src.title};
+    const qi = src.questions.findIndex(q => Array.isArray(q) && q[0].replace(/^★ /, '').indexOf(pre) === 0);
+    return {sid, qi, q: src.questions[qi], title: src.title, yes: yes || 1};
   });
   return sec._links;
 };
-// 0-3 for Never..Regularly, 0/1 for No/Yes, or null when unanswered
+// 0-3 for Never..Regularly, 0 or the section's Yes value for No/Yes, or null when unanswered
 window.linkLevel = function(l) {
   const el = document.querySelector('input[name="' + l.sid + '_q' + l.qi + '"]:checked');
   if (!el) return null;
-  if (l.q[1] === 'yn') return el.id.endsWith('_y') ? 1 : 0;
+  if (l.q[1] === 'yn') return el.id.endsWith('_y') ? l.yes : 0;
   return parseInt(el.id.slice(el.id.lastIndexOf('_') + 1)) || 0;
 };
 
