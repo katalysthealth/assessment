@@ -48,6 +48,16 @@ body{font-family:'Inter',sans-serif;background:var(--k-bg);color:var(--k-text);f
 .link-src{color:var(--k-muted);font-size:0.75rem;white-space:nowrap}
 .link-go{margin-left:6px;border:0;background:none;padding:0;color:var(--k-dark);font:inherit;font-size:0.78rem;font-weight:600;text-decoration:underline;cursor:pointer}
 .q-row.link-flash,.yn-row.link-flash{outline:3px solid #e8b84a;outline-offset:-3px;transition:outline-color .3s}
+.link-note{font-size:0.82rem;color:var(--k-muted);font-style:italic}
+.todo-wrap{display:none}
+.todo-wrap.active{display:block}
+.todo-card{background:#fff8e6;border:1px solid #f0d080;border-radius:10px;padding:14px 18px;margin:16px 0 8px}
+.todo-card h3{margin:0 0 4px;font-size:1rem;color:#7a5800}
+.todo-sub{font-size:0.8rem;color:var(--k-muted);margin-bottom:8px}
+.todo-sec{font-size:0.72rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--k-muted);margin:10px 0 2px}
+.todo-row{display:flex;gap:10px;align-items:baseline;padding:4px 0;font-size:0.86rem;border-bottom:1px dashed #f0d080}
+.todo-row:last-child{border-bottom:0}
+.todo-q{flex:1}
 .link-ans{min-width:96px;text-align:right;font-weight:600;font-size:0.8rem;color:var(--k-muted)}
 .notice-collapsed .notice-summary{display:flex}
 .notice-summary{display:none;align-items:center;gap:8px;padding:8px 0;font-size:0.82rem;color:var(--k-muted);font-family:'Inter',sans-serif}
@@ -250,6 +260,7 @@ body{font-family:'Inter',sans-serif;background:var(--k-bg);color:var(--k-text);f
 }
 
 @media print{
+  .todo-wrap{display:none!important}
   *{-webkit-print-color-adjust:exact;print-color-adjust:exact}
   body{background:white;font-size:11px}
   .page-header{background:var(--k-dark)!important}
@@ -350,6 +361,7 @@ body{font-family:'Inter',sans-serif;background:var(--k-bg);color:var(--k-text);f
   <input type="file" id="load-file" accept=".json" style="display:none" onchange="loadFromFile(this)">
 </div>
 
+<div class="main-wrap todo-wrap" id="todo-wrap"></div>
 <div class="main-wrap" id="form-root"></div>
 
 <div class="summary-wrap" id="summary-wrap">
@@ -1253,9 +1265,7 @@ document.addEventListener('DOMContentLoaded', function() {
       if (sec.links) {
         const box = document.createElement('div');
         box.className = 'link-box';
-        box.innerHTML = '<div class="link-head">Also counted here from your answers in other sections</div>' +
-          linksOf(sec).map((l, i) => '<div class="link-row"><span class="link-q">' + l.q[0].replace(/^\u2605 /, '') +
-            '</span><span class="link-src">' + l.title + '</span><span class="link-ans" id="lnk_' + sec.id + '_' + i + '">Not answered</span></div>').join('');
+        box.innerHTML = '<div class="link-note">Some answers from other sections also count here. Your score updates as you go.</div>';
         card.appendChild(box);
       }
       const footer = document.createElement('div');
@@ -1340,12 +1350,6 @@ function recalcOne(sid) {
   if (!sec) return;
   const st = sectionStatus(sec);
   const total = st.total;
-  linksOf(sec).forEach((l, i) => {
-    const el = document.getElementById('lnk_' + sid + '_' + i); if (!el) return;
-    const lv = linkLevel(l);
-    if (lv === null) el.innerHTML = 'Not answered <button type="button" class="link-go" onclick="goToQuestion(\'' + l.sid + '\',' + l.qi + ')">Go to question</button>';
-    else el.textContent = l.q[1] === 'yn' ? (lv ? 'Yes' : 'No') : FL[lv];
-  });
   const numEl  = document.getElementById('snum_'+sid);
   const statEl = document.getElementById('sstat_'+sid);
   const badgeEl= document.getElementById('hbadge_'+sid);
@@ -1399,8 +1403,35 @@ window.syncTwins = function(radio) {
   });
 };
 
+// Step 8: required questions not yet answered, each listed once (duplicate copies count as one)
+window.updateTodo = function() {
+  const wrap = document.getElementById('todo-wrap');
+  if (!wrap) return;
+  // only built on Step 8, so answering questions on Steps 1-7 stays fast
+  if (typeof currentStep === 'undefined' || currentStep !== TOTAL_STEPS) { wrap.classList.remove('active'); return; }
+  const copies = new Set(TWINS.flatMap(g => g.slice(1)));
+  const groups = [];
+  SECTIONS.forEach(sec => {
+    const items = [];
+    sec.questions.forEach((q, qi) => {
+      if (!Array.isArray(q) || (q[1] !== 'f' && q[1] !== 'yn') || q[0].indexOf('(women only)') !== -1) return;
+      const name = sec.id + '_q' + qi;
+      if (copies.has(name)) return;
+      const grp = TWINS.find(g => g[0] === name) || [name];
+      if (grp.every(n => document.querySelector('input[name="' + n + '"]:checked'))) return;
+      items.push('<div class="todo-row"><span class="todo-q">' + q[0].replace(/^\u2605 /, '') +
+        '</span><button type="button" class="link-go" onclick="goToQuestion(\'' + sec.id + '\',' + qi + ')">Go to question</button></div>');
+    });
+    if (items.length) groups.push('<div class="todo-sec">' + sec.title + '</div>' + items.join(''));
+  });
+  const n = groups.join('').split('class="todo-row"').length - 1;
+  wrap.innerHTML = n ? '<div class="todo-card"><h3>Questions still to answer (' + n + ')</h3><div class="todo-sub">Answering \u201cNever\u201d or \u201cNo\u201d counts. Each question is listed once, under the section where you answer it.</div>' + groups.join('') + '</div>' : '';
+  wrap.classList.toggle('active', currentStep === TOTAL_STEPS && n > 0);
+};
+
 window.recalc = function(sid) {
   recalcOne(sid);
+  updateTodo();
   SECTIONS.forEach(s => { if (s.id !== sid && linksOf(s).some(l => l.sid === sid)) recalcOne(s.id); });
 };
 
@@ -1750,6 +1781,8 @@ window.emailResults = function() {
   window.open(mailto, '_blank');
 };
 
+var _goToStep = window.goToStep;
+window.goToStep = function(n) { _goToStep(n); updateTodo(); };
 document.getElementById('form-root').addEventListener('change', function(e) {
   if (e.target && e.target.type === 'radio') syncTwins(e.target);
   saveState();
