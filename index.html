@@ -40,6 +40,13 @@ body{font-family:'Inter',sans-serif;background:var(--k-bg);color:var(--k-text);f
 .notice-emergency{background:#fdecea;border:1px solid #f3b7b1;border-left:5px solid #c0392b;color:#7d241c}
 .notice-emergency b{color:#a52c22}
 .notice-collapsed .notice-card.notice-emergency{display:block}
+.link-box{margin:0;padding:12px 18px 14px;border-top:1px solid var(--k-rule);background:#f7faf9}
+.link-head{font-size:0.72rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--k-muted);margin-bottom:6px}
+.link-row{display:flex;gap:10px;align-items:baseline;padding:4px 0;font-size:0.84rem;border-bottom:1px dashed var(--k-rule)}
+.link-row:last-child{border-bottom:0}
+.link-q{flex:1}
+.link-src{color:var(--k-muted);font-size:0.75rem;white-space:nowrap}
+.link-ans{min-width:96px;text-align:right;font-weight:600;font-size:0.8rem;color:var(--k-muted)}
 .notice-collapsed .notice-summary{display:flex}
 .notice-summary{display:none;align-items:center;gap:8px;padding:8px 0;font-size:0.82rem;color:var(--k-muted);font-family:'Inter',sans-serif}
 
@@ -1052,7 +1059,9 @@ const SECTIONS = [
 
 { id:'mold', title:'Mycotoxins / Mold & CIRS',
   group:'Toxicants & Toxins',
-  g:[0,25], y:[26,70], r:[71,160],
+  g:[0,37], y:[38,106], r:[107,241],
+  // Answered in other sections, also counted here on a 0-3 (Yes = 1) scale
+  links:[['hyperthyroid','Inward trembling or internal vibrating sensation'],['bartonella','Eye floaters or visual snow'],['generaltox','Chronic fungal or viral infection'],['generaltox','Sensitivity to skin or light touch'],['generaltox','Appetite swings'],['generaltox','Weakness or numbness in extremities'],['bartonella','Muscle twitching, cramps, or spasms'],['bartonella','Abdominal pain, cramping, or bloating'],['bartonella','IBS-like alternating constipation and diarrhea'],['bartonella','New food intolerances or sensitivities'],['bartonella','Tinnitus (ear ringing, buzzing, or pressure)'],['spike','Changes in menstrual cycle'],['radioactive','Bladder infection (cystitis)'],['radioactive','Earaches or difficulty hearing'],['parasites','Anemia (low iron/hemoglobin on blood test)'],['parasites','Dark circles under eyes'],['parasites','Frequent vomiting'],['mercury','Dizzy or balance issues'],['mcas','Reaction to high-histamine foods'],['pots','Diagnosis of Ehlers-Danlos syndrome (EDS) or hypermobility']],
   bartNote:'★ = Hallmark item. Symptoms that may be associated with mycotoxin exposure and CIRS. This is a screening indicator, not diagnostic. A high score helps guide follow-up environmental testing and CIRS workup priorities.',
   questions:[
   ['— Environmental Exposure & Building Correlation —','sub'],
@@ -1108,6 +1117,16 @@ const SECTIONS = [
   ['Sensitive to chemicals, fragrances, or exhaust fumes','f',_A],
   ['Sensitive to EMFs or electrical devices','f',_A],
   ['Irregular heartbeat or palpitations','f',_A],
+  ['— Additional Symptoms & History —','sub'],
+  ['Notice musty or moldy smells that others don\'t','f',_A],
+  ['Skin rashes, or itchy or burning skin','f',_A],
+  ['Nosebleeds','f',_A],
+  ['Ears feel plugged, or itchy ear canals','f',_A],
+  ['Asthma or asthma-like breathing symptoms','f',_A],
+  ['Vertigo or spinning dizziness','f',_A],
+  ['Watery or tearing eyes','f',_A],
+  ['Nasal polyps, sinus surgery, or daily sinus rinses or sprays','yn',[0,1]],
+  ['Known mold allergy','yn',[0,1]],
 ]},
 
 ];
@@ -1215,6 +1234,14 @@ document.addEventListener('DOMContentLoaded', function() {
         }
       }
 
+      if (sec.links) {
+        const box = document.createElement('div');
+        box.className = 'link-box';
+        box.innerHTML = '<div class="link-head">Also counted here from your answers in other sections</div>' +
+          linksOf(sec).map((l, i) => '<div class="link-row"><span class="link-q">' + l.q[0].replace(/^\u2605 /, '') +
+            '</span><span class="link-src">' + l.title + '</span><span class="link-ans" id="lnk_' + sec.id + '_' + i + '">Not answered</span></div>').join('');
+        card.appendChild(box);
+      }
       const footer = document.createElement('div');
       footer.className = 'sec-score-footer';
       footer.innerHTML = '<div class="ssf-left"><div class="ssf-label">Live Score Total \u2193</div><div class="ssf-number" id="snum_' + sec.id + '">0</div><div style="font-size:0.7rem;color:var(--k-muted);margin-left:4px;align-self:center">pts<br>(updates<br>as you answer)</div></div><div class="ssf-thresholds"><div class="thresh-box t-g" id="tb_g_' + sec.id + '"><div class="t-dot"></div>Green 0\u2013' + sec.g[1] + '</div><div class="thresh-box t-y" id="tb_y_' + sec.id + '"><div class="t-dot"></div>Yellow ' + sec.y[0] + '\u2013' + sec.y[1] + '</div><div class="thresh-box t-r" id="tb_r_' + sec.id + '"><div class="t-dot"></div>Red ' + sec.r[0] + '+</div></div><div class="ssf-status" id="sstat_' + sec.id + '">Not yet answered</div>';
@@ -1255,6 +1282,23 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 
 // Colour only once every question is answered; "(women only)" questions are optional.
+window.linksOf = function(sec) {
+  if (!sec.links) return [];
+  if (!sec._links) sec._links = sec.links.map(([sid, pre]) => {
+    const src = SECTIONS.find(s => s.id === sid);
+    const qi = src.questions.findIndex(q => Array.isArray(q) && q[0].indexOf(pre) === 0);
+    return {sid, qi, q: src.questions[qi], title: src.title};
+  });
+  return sec._links;
+};
+// 0-3 for Never..Regularly, 0/1 for No/Yes, or null when unanswered
+window.linkLevel = function(l) {
+  const el = document.querySelector('input[name="' + l.sid + '_q' + l.qi + '"]:checked');
+  if (!el) return null;
+  if (l.q[1] === 'yn') return el.id.endsWith('_y') ? 1 : 0;
+  return parseInt(el.id.slice(el.id.lastIndexOf('_') + 1)) || 0;
+};
+
 window.sectionStatus = function(sec) {
   let total = 0, answered = 0, required = 0, requiredAnswered = 0;
   sec.questions.forEach((q,qi) => {
@@ -1264,16 +1308,27 @@ window.sectionStatus = function(sec) {
     if (!optional) required++;
     if (el) { total += parseInt(el.value)||0; answered++; if (!optional) requiredAnswered++; }
   });
+  linksOf(sec).forEach(l => {
+    const optional = l.q[0].indexOf('(women only)') !== -1;
+    const lv = linkLevel(l);
+    if (!optional) required++;
+    if (lv !== null) { total += lv; answered++; if (!optional) requiredAnswered++; }
+  });
   let range = '?';
   if (answered > 0) range = requiredAnswered < required ? 'i' : total<=sec.g[1] ? 'g' : total<=sec.y[1] ? 'y' : 'r';
   return {total, answered, required, requiredAnswered, range};
 };
 
-window.recalc = function(sid) {
+function recalcOne(sid) {
   const sec = SECTIONS.find(s => s.id === sid);
   if (!sec) return;
   const st = sectionStatus(sec);
   const total = st.total;
+  linksOf(sec).forEach((l, i) => {
+    const el = document.getElementById('lnk_' + sid + '_' + i); if (!el) return;
+    const lv = linkLevel(l);
+    el.textContent = lv === null ? 'Not answered' : l.q[1] === 'yn' ? (lv ? 'Yes' : 'No') : FL[lv];
+  });
   const numEl  = document.getElementById('snum_'+sid);
   const statEl = document.getElementById('sstat_'+sid);
   const badgeEl= document.getElementById('hbadge_'+sid);
@@ -1299,6 +1354,10 @@ window.recalc = function(sid) {
   badgeEl.textContent='Score: '+total+'  |  '+label;
   sumRng.innerHTML='<span class="spill-'+range+'">'+label+'</span>';
   updateProgress();
+}
+window.recalc = function(sid) {
+  recalcOne(sid);
+  SECTIONS.forEach(s => { if (s.id !== sid && linksOf(s).some(l => l.sid === sid)) recalcOne(s.id); });
 };
 
 window.copyScores = function() {
