@@ -411,7 +411,7 @@ const SECTIONS = [
 { id:'mito', title:'Mitochondrial Dysfunction — Unique Indicators',
   group:'Immune History & Energy Systems',
   g:[0,10], y:[11,33], r:[34,78],
-  links:[['spike','Brain fog'],['spike','Difficulty concentrating or focusing'],['parasites','Mood disorder, depression, anxiety'],['generaltox','Issues processing new information'],['radioactive','Suppressed immune system?',5],['parasites','Frequent colds, flu, or sore throats'],['parasites','Need for extra sleep, wake unrefreshed'],['spike','Insomnia or unrefreshing sleep'],['lymesymptoms','Fatigue, lack of energy'],['lymesymptoms','Sexual dysfunction or low libido']], questions:[
+  links:[['spike','Brain fog'],['spike','Difficulty concentrating or focusing'],['parasites','Mood disorder, depression, or anxiety'],['generaltox','Issues processing new information'],['radioactive','Suppressed immune system?',5],['parasites','Frequent colds, flu, or sore throats'],['parasites','Need for extra sleep, wake unrefreshed'],['spike','Insomnia or unrefreshing sleep'],['lymesymptoms','Fatigue, lack of energy'],['lymesymptoms','Sexual dysfunction or low libido']], questions:[
   ['History of chronic infections (EBV, CMV, Lyme, mold, etc.)?','yn',[0,5]],
   ['Unable to tolerate much exercise — crashes after activity','f',_A],
   ['Poor exercise or muscle stamina — muscles fatigue very quickly','f',_A],
@@ -431,7 +431,7 @@ const SECTIONS = [
 { id:'drainage', title:'Drainage & Lymphatic Dysfunction — Unique Indicators',
   group:'Immune History & Energy Systems',
   g:[0,12], y:[13,31], r:[32,63],
-  links:[['lymesymptoms','Fatigue, lack of energy'],['parasites','Mood disorder, depression, anxiety'],['generaltox','Issues processing new information'],['parasites','Skin issues, rashes, itches, hives, eczema, or acne'],['radioactive','Suppressed immune system?',3],['mold','Morning stiffness in joints or muscles'],['spike','Brain fog']], questions:[
+  links:[['lymesymptoms','Fatigue, lack of energy'],['parasites','Mood disorder, depression, or anxiety'],['generaltox','Issues processing new information'],['parasites','Skin issues, rashes, itches, hives, eczema, or acne'],['radioactive','Suppressed immune system?',3],['mold','Morning stiffness in joints or muscles'],['spike','Brain fog']], questions:[
   ['Wake up between 1am and 4am (not for bathroom)','f',_A],
   ['Edema — swelling or retaining extra fluids in body','f',_A],
   ['Yellowish tinge to skin or eyes','f',_A],
@@ -474,8 +474,8 @@ const SECTIONS = [
   links:[['lymesymptoms','Fatigue, lack of energy'],['lymesymptoms','Depression'],['radioactive','Hair loss'],['generaltox','Issues processing new information'],['lymesymptoms','Sexual dysfunction or low libido'],['radioactive','Fertility problems']], questions:[
   ['Feel cold — hands, feet, or whole body most of the time','f',_A],
   ['Require excessive sleep (10+ hours) just to function','f',_A],
-  ['★ Thinning of the outer third of eyebrows (highly specific to hypothyroid)','f',_B],
-  ['Diffuse hair thinning on scalp including lateral eyebrows and outer arms','f',_A],
+  ['★ Thinning of the outer third of eyebrows','f',_B],
+  ['Diffuse hair thinning on the scalp or outer arms','f',_A],
   ['Dry, rough skin particularly on heels, elbows, and shins','f',_A],
   ['Heavy or profuse menstrual bleeding (women only)','f',_A],
 ]},
@@ -568,7 +568,7 @@ const SECTIONS = [
   ['Fingernail biting','f',_B],
   ['Headaches or migraines','f',_A],
   ['Irritable with no apparent reason','f',_A],
-  ['Mood disorder, depression, anxiety, or suicidal thoughts','f',_A],
+  ['Mood disorder, depression, or anxiety','f',_A],
   ['Hyperactive tendency or nervous energy','f',_B],
   ['Dark circles under eyes','f',_A],
   ['Need for extra sleep, wake unrefreshed','f',_H],
@@ -810,7 +810,7 @@ const SECTIONS = [
   links:[['mold','Red or burning eyes'],['lymesymptoms','Difficulty swallowing'],['spike','Temperature dysregulation (running hot or cold)'],['bartonella','Anxiety or panic attacks'],['spike','Insomnia or unrefreshing sleep'],['bartonella','Sensory hypersensitivity']],
   bartNote:'★ = Hallmark item (×2). A pattern that may be associated with MCAS can be seen when symptoms recur across multiple organ systems. This is a screening indicator, not diagnostic. Helps guide follow-up questions, testing priorities, and whether formal MCAS workup is warranted.',
   questions:[
-  ['— Core Diagnostic Indicators —','sub'],
+  ['— Core Indicators —','sub'],
   ['★ Spontaneous urticaria (hives) appearing and disappearing without known cause','f',_B],
   ['★ Angioedema — swelling of lips, tongue, throat, or face','f',_B],
   ['★ Anaphylaxis or near-anaphylaxis (epinephrine use or ER visits)','f',_B],
@@ -839,7 +839,7 @@ const SECTIONS = [
   ['Headaches or migraines triggered by environmental factors','f',_A],
   ['Neuropathic pain or burning not explained by other diagnosis','f',_A],
   ['— Musculoskeletal —','sub'],
-  ['★ Unexplained osteoporosis, especially in younger or male patients','f',_B],
+  ['★ Unexplained osteoporosis, especially if you are young or male','f',_B],
   ['Bone pain or joint pain without inflammatory marker elevation','f',_A],
   ['— Triggers & Chemical Sensitivities —','sub'],
   ['★ Reaction to NSAIDs (ibuprofen/aspirin) — flushing, hives, or GI upset','f',_B],
@@ -995,7 +995,7 @@ const SECTIONS = [
   ['Insomnia','f',_A],
   ['Low body temperature (below 97.5°F / 36.4°C)','f',_A],
   ['Sound in ears — ringing or hearing your own heartbeat','f',_A],
-  ['Psychological symptoms, even thoughts of suicide','f',_A],
+  ['Psychological or emotional symptoms','f',_A],
   ['Sound sensitivities','f',_A],
 ]},
 
@@ -1097,7 +1097,7 @@ const SECTIONS = [
   group:'Toxicants & Toxins',
   g:[0,44], y:[45,129], r:[130,292],
   // Answered in other sections, also counted here on a 0-3 (Yes = 1) scale
-  links:[['hyperthyroid','Inward trembling or internal vibrating sensation'],['bartonella','Eye floaters or visual snow'],['generaltox','Chronic fungal or viral infection'],['generaltox','Sensitivity to skin or light touch'],['generaltox','Appetite swings'],['generaltox','Weakness or numbness in extremities'],['bartonella','Muscle twitching, cramps, or spasms'],['bartonella','Abdominal pain, cramping, or bloating'],['bartonella','IBS-like alternating constipation and diarrhea'],['bartonella','New food intolerances or sensitivities'],['bartonella','Tinnitus (ear ringing, buzzing, or pressure)'],['spike','Changes in menstrual cycle'],['radioactive','Bladder infection (cystitis)'],['radioactive','Earaches or difficulty hearing'],['parasites','Anemia (low iron/hemoglobin on blood test)'],['parasites','Dark circles under eyes'],['parasites','Frequent vomiting'],['mercury','Dizzy or balance issues'],['mcas','Reaction to high-histamine foods'],['pots','Diagnosis of Ehlers-Danlos syndrome (EDS) or hypermobility'],['spike','Insomnia or unrefreshing sleep'],['mito','Unable to tolerate much exercise'],['generaltox','Difficulty losing weight'],['mercury','Sound sensitivities'],['parasites','Mood disorder, depression, anxiety'],['lymesymptoms','Sore throat or swollen glands'],['parasites','Frequent colds, flu, or sore throats'],['spike','Unusual bruising or clotting concerns'],['drainage','Edema'],['spike','Nausea'],['mcas','Nasal congestion or sneezing'],['parasites','Strong sugar and processed food cravings'],['bartonella','Urinary frequency, urgency, or bladder pain']],
+  links:[['hyperthyroid','Inward trembling or internal vibrating sensation'],['bartonella','Eye floaters or visual snow'],['generaltox','Chronic fungal or viral infection'],['generaltox','Sensitivity to skin or light touch'],['generaltox','Appetite swings'],['generaltox','Weakness or numbness in extremities'],['bartonella','Muscle twitching, cramps, or spasms'],['bartonella','Abdominal pain, cramping, or bloating'],['bartonella','IBS-like alternating constipation and diarrhea'],['bartonella','New food intolerances or sensitivities'],['bartonella','Tinnitus (ear ringing, buzzing, or pressure)'],['spike','Changes in menstrual cycle'],['radioactive','Bladder infection (cystitis)'],['radioactive','Earaches or difficulty hearing'],['parasites','Anemia (low iron/hemoglobin on blood test)'],['parasites','Dark circles under eyes'],['parasites','Frequent vomiting'],['mercury','Dizzy or balance issues'],['mcas','Reaction to high-histamine foods'],['pots','Diagnosis of Ehlers-Danlos syndrome (EDS) or hypermobility'],['spike','Insomnia or unrefreshing sleep'],['mito','Unable to tolerate much exercise'],['generaltox','Difficulty losing weight'],['mercury','Sound sensitivities'],['parasites','Mood disorder, depression, or anxiety'],['lymesymptoms','Sore throat or swollen glands'],['parasites','Frequent colds, flu, or sore throats'],['spike','Unusual bruising or clotting concerns'],['drainage','Edema'],['spike','Nausea'],['mcas','Nasal congestion or sneezing'],['parasites','Strong sugar and processed food cravings'],['bartonella','Urinary frequency, urgency, or bladder pain']],
   bartNote:'★ = Hallmark item. Symptoms that may be associated with mycotoxin exposure and CIRS. This is a screening indicator, not diagnostic. A high score helps guide follow-up environmental testing and CIRS workup priorities.',
   questions:[
   ['— Environmental Exposure & Building Correlation —','sub'],
