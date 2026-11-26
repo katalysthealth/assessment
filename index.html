@@ -607,11 +607,19 @@ const SECTIONS = [
 
 { id:'sibo', title:'SIBO (Small Intestinal Bacterial Overgrowth)',
   group:'Pathogens',
-  g:[0,1], y:[2,4], r:[5,12], questions:[
+  g:[0,4], y:[5,21], r:[22,51],
+  links:[['parasites','SIBO-like bloating or gas'],['parasites','Alternating constipation and diarrhea'],['parasites','Frequent diarrhea or loose stools'],['parasites','Abdominal pains, cramps, or burning'],['pots','GI dysmotility'],['mcas','Multiple food intolerances across unrelated food categories'],['minerals','History of lower right abdominal pains or ileocecal valve problems',3]],
+  questions:[
   ['Abdominal distention after consuming fiber, starches, or sugar','f',_A],
   ['Abdominal distention after taking probiotics or digestive supplements','f',_A],
   ['Bloating or noisy gut after eating healthy vegetables','f',_A],
   ['Bloating or feeling full just below the rib cage','f',_A],
+  ['Bloating after meals that lasts for hours','f',_A],
+  ['Constipation, or feeling that bowels don\'t empty completely','f',_A],
+  ['Fatty foods cause nausea, urgency, or bloating','f',_A],
+  ['Digestive symptoms flare with stress','f',_A],
+  ['Symptoms improve on antibiotics or herbal antimicrobials, then come back','f',_A],
+  ['Gallbladder removed','yn',[0,3]],
 ]},
 
 // ══════════════════════════════════════════════════
